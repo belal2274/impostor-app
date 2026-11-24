@@ -5,7 +5,7 @@ No secrets here. The random category is out of scope for tests and must not be t
 - Runtime: Node >= 18, no dependencies. `server.js` listens on load (it exports nothing), so tests start it as a child process: `PORT=<free port> node server.js`.
 - Do not set SUPA_URL / SUPA_KEY. Without them accounts live in memory (same code path, fake store). No external network is needed.
 - Health: `GET /health` returns 200.
-- Existing tests: puppeteer browser tests are in impostor-app tests/ (they need a local Chrome). The server repo has none. A dependency-free `node:test` suite under `tests/**` using fetch against the child process is fine. One PR per repo to `dev`.
+- Existing tests: puppeteer browser tests are in impostor-app tests/ (need local Chrome). The server repo has none. A dependency-free `node:test` suite under `tests/**` using fetch against the child process is fine. One PR per repo to `dev`.
 - Do not edit: server.js, catalog.json, scripts/**. Add only new files under tests/** and docs/**.
 - Rate limit: `/acc` is limited to 60 requests/min per IP, so keep per-test request counts low or space them.
 
@@ -34,7 +34,8 @@ Claim rules (add):
 - Round unknown, not finished, or cid not in that round -> 404. A round only exists in history once its result is computed.
 - Same (round, cid) claimed twice -> second is 409 (or 200 `dup:true` when the same rid was already stored on the account). Calls for one account are serialized (lock), so concurrent identical claims give one 200 and one 409/dup. Different accounts/cids are independent.
 - Balance rule per claim: bal = max(0, pts + roundPoints), then + bonus if winner. So the floor applies per claim before the bonus, not on the aggregate.
-- Known limit: the claim names a cid, and the account is not bound to the cid on the server.
+- Ownership: the join message may carry `u:<username>`. The server binds that cid to the account for that room (first join of a cid wins, repeat joins are ignored) and the binding carries into next-round rooms. A claim for a cid bound to a different account, or unbound, -> 403 `not your player`. So claim tests must join with `u` equal to the claiming account.
+- Consumption is global per (room, round, cid): once claimed, nobody else can claim it (409).
 
 Room endpoints (room code in the path, JSON body with `t`): join `j` (host creates), `ready`, `vote`, `state`, `fx`, etc. Room create (host join only): n 2..9 else 404; rounds = floor, clamped 1..20, non-numeric -> 3; dur seconds clamped 60..900, non-numeric -> 180. Sent only in the host's first join, ignored afterwards. Next-round rooms keep rounds and dur.
 - fx `{t:'fx',k,s}`: id must start with s or a and exist in catalog, round must have started (goAt set) else 400; sender must be in the round else 403.
@@ -46,14 +47,14 @@ Room endpoints (room code in the path, JSON body with `t`): join `j` (host creat
 - Stored for the 30 most recent events, kept 30 s.
 
 ## 4. Settings boundaries
-Out of range values are clamped, not rejected. Non-integers are floored. After the room exists the host values are ignored.
+Numeric out-of-range values are clamped (rounds 0 -> 1, dur 0 -> 60; 99 -> 20, 5000 -> 900). Non-integers are floored. Missing or non-numeric values use the defaults (rounds 3, dur 180). After the room exists the host values are ignored.
 
 ## 5. Room protocol, exact shapes
 Base: `POST /r/<code>` with a JSON body, `Content-Type` any. `<code>` = 5 digits: digit 1 = category (1..9), digit 2 = player count n (2..9), digits 3-5 any (e.g. `13123` = category 1, 3 players). Rate limit 1500 req/min per IP. Body max 4096 bytes. Every body needs `t` (string) and `c` (string cid, max 20 chars, your client id, one per player). Errors are plain text.
 Live stream: `GET /r/<code>?c=<cid>` is server-sent events. Each line is `data: <json>`. Join messages echo as `{t:'j',v:'full'|'fam',c,n,a}` and when the room fills each member gets `{t:'role',imp:bool,r:int|null}`. `r` is the word index for non-impostors, null for the impostor. Tests can learn the impostor from this (the `reveal` POST answers 403 `later` while a round is running).
 
 ### join (create + fill)
-`{t:'j', c:'p1', n:'Ali', a:'', v:'full'}` -> 200 `ok`. The first join of a code by `{host:true, rounds:3, dur:180}` creates the room (host = leader). Without host and with no room -> 404 `no room`. `n` name max 14 chars, `a` avatar string (''), `v` 'fam' or 'full'. A repeat join or full roster -> 200 `ok` (ignored). `{t:'l', c}` leaves while in the lobby. When the roster reaches n, the round object is created (players fixed = roster).
+`{t:'j', c:'p1', n:'Ali', a:'', v:'full', u:'<username, optional>'}` -> 200 `ok`. The first join of a code by `{host:true, rounds:3, dur:180}` creates the room (host = leader). Without host and with no room -> 404 `no room`. `n` name max 14 chars, `a` avatar string (''), `v` 'fam' or 'full'. A repeat join or full roster -> 200 `ok` (ignored). `{t:'l', c}` leaves while in the lobby. When the roster reaches n, the round object is created (players fixed = roster).
 
 ### ready / start
 All players POST `{t:'ready', c}` -> state JSON. When all are ready the server sets `ca` (countdown ms, 3000). After that time each player POSTs `{t:'seen', c}`. When all have seen, the round clock starts (`el` in state is ms since start). Votes are accepted only after that.

@@ -74,6 +74,11 @@
    "id": "s15",
    "file": "s15.webp",
    "price": 10
+  },
+  {
+   "id": "s16",
+   "file": "s16.webp",
+   "price": 10
   }
  ],
  "sounds": [

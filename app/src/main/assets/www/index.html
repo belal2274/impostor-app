@@ -214,7 +214,7 @@ function evalLobby(R){
   var sig=ros.map(function(x){return x.c}).join()+'|'+mine+'|'+ros.length+'|'+LB.err+'|'+LB.conn+'|'+LB.gone+'|'+LB.slow;if(sig!==LB.sig){LB.sig=sig;draw()}}
 function startLobby(R){if(LB.code===R.code)return;stopLobby();LB.code=R.code;
   LB.st=setTimeout(function(){if(LB.code===R.code&&!LB.conn){LB.slow=true;evalLobby(R)}},6000);
-  var th=ls('pthumb')||'',me={t:'j',v:(ED==='family'?'fam':'full'),c:CID,n:pname(),a:(th&&th.length<3600?th:myAv())+myFr()};
+  var th=ls('pthumb')||'',me={t:'j',v:(ED==='family'?'fam':'full'),c:CID,u:accName(),n:pname(),a:(th&&th.length<3600?th:myAv())+myFr()};
   function connect(){if(LB.code!==R.code)return;
     var es=new EventSource(topic(R.code)+'?c='+encodeURIComponent(CID));LB.es=es;
     es.addEventListener('open',function(){if(LB.code!==R.code)return;LB.err=false;LB.conn=true;LB.roster=[];clearTimeout(LB.pt);
