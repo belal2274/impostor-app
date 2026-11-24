@@ -28,13 +28,12 @@ Word photos: source Wikimedia Commons (free licenses). word | author | license |
 1:قطايف | Aseel zm | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kataef_12.jpg
 1:بقلاوة | Kevorkmail (talk) | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Baklava_sweets_from_Aleppo.jpg
 1:مهلبية | E4024 | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Turkish_muhallebi.jpg
-1:رز باللبن | Shivangisj | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kheer_with_condensed_milk..JPG
+1:رز بلبن | Shivangisj | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Kheer_with_condensed_milk..JPG
 1:زلابية | Gpkp | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:2nd_Ayurveda_World_Summit,_Palace_grounds,_Bangalore_(2025)_87.jpg
 1:لقمة القاضي | Benreis | CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Lokma_Galata_Bridge.JPG
 1:بلح | M. Dhifallah | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Dattes_deglet_from_Biskra.jpg
 1:سوبيا | موسى | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:كأس_سوبيا.jpg
 1:شاي بالنعناع | Mouhcine Boudanes | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Moroccan_cups_of_tea_with_ment.jpg
-1:بطاطا مشوية | Renee Comet (photographer) | Public domain | https://commons.wikimedia.org/wiki/File:BakedPotatoWithButter.jpg
 1:عصير قصب | Food Trails | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Sugarcanejuice.jpg
 1:عصير ليمون | David Goehring | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Lemon_juice.jpg
 1:فسيخ | Faris knight | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Fesikh-Desouk.JPG
@@ -59,8 +58,7 @@ Word photos: source Wikimedia Commons (free licenses). word | author | license |
 3:عقرب | Chris huh | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Asian_forest_scorpion_in_Khao_Yai_National_Park.JPG
 3:نحلة | Didier Descouens | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:(MHNT)_Apis_mellifera_(female)_-_on_viburnum_tinus_flowers.jpg
 3:دبور | Richard Bartz, Munich aka Makro Freak | CC BY-SA 2.5 | https://commons.wikimedia.org/wiki/File:Vespula_germanica_Richard_Bartz.jpg
-3:نملة | fir0002  flagstaffotos [at] gmail.com
-		Canon 20D + Sigma 150mm f/2.8 | GFDL 1.2 | https://commons.wikimedia.org/wiki/File:Meat_eater_ant_feeding_on_honey02.jpg
+3:نملة | fir0002 flagstaffotos [at] gmail.com Canon 20D + Sigma 150mm f/2.8 | GFDL 1.2 | https://commons.wikimedia.org/wiki/File:Meat_eater_ant_feeding_on_honey02.jpg
 3:فراشة | Culturegeeks | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Butter_fly_in_Itami_greenhouse_3.jpg
 3:ناموسة | James Gathany, USCDCP | CC0 | https://commons.wikimedia.org/wiki/File:Mosquito_on_human_skin.jpg
 3:ذبابة | Muhammad Mahdi Karim | GFDL 1.2 | https://commons.wikimedia.org/wiki/File:Musca_domestica_housefly.jpg
@@ -70,10 +68,7 @@ Word photos: source Wikimedia Commons (free licenses). word | author | license |
 3:نسر | Charles J. Sharp | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Hooded_vulture_(Necrosyrtes_monachus_pileatus).jpg
 3:صقر | Ken Billington | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Peregrine_Falcon_(Falco_peregrinus)_(4).jpg
 3:غراب | Fernando Losada Rodríguez | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Corvus_corax.001_-_Tower_of_London.JPG
-3:نعامة | PaleoNeolitic (montage creator)
-
-Diego Delso
-ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.jpg
+3:نعامة | PaleoNeolitic (montage creator) Diego Delso ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.jpg
 3:بطة | Mdf | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Bucephala-albeola-010.jpg
 3:إوزة | Piotr Kuczynski | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Anser_anser_1_(Piotr_Kuczynski)_(cropped).jpg
 3:ديك | Fernando de Sousa from Melbourne, Australia | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Brown_Leghorn_rooster_in_Australia.jpg
@@ -88,8 +83,7 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 3:نجم البحر | TheMargue | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Royal_starfish_(Astropecten_articulatus)_on_the_beach.jpg
 3:فقمة | Matthieu Godbout | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Blanchon-idlm2006.jpg
 3:دب قطبي | Andreas Weith | CC BY-SA 4.0 | https://commons.wikimedia.org/wiki/File:Polar_bear_near_Sjuøyane_with_a_typical_gesture_assessing_the_situation.jpg
-3:كنغر | fir0002  flagstaffotos [at] gmail.com
-		Canon 20D + Canon 70-200mm f/2.8 L | GFDL 1.2 | https://commons.wikimedia.org/wiki/File:Kangaroo_and_joey03.jpg
+3:كنغر | fir0002 flagstaffotos [at] gmail.com Canon 20D + Canon 70-200mm f/2.8 L | GFDL 1.2 | https://commons.wikimedia.org/wiki/File:Kangaroo_and_joey03.jpg
 3:كوالا | Diliff | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Koala_climbing_tree.jpg
 3:لاما | Liné1 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Lama_glama_01_by_Line1.jpg
 3:غزال | Erik A. Drabløs | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Thomsons-gazelle.jpg
@@ -101,9 +95,7 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 3:جندب | http://www.birdphotos.com | CC BY 3.0 | https://commons.wikimedia.org/wiki/File:American_Bird_Grasshopper.jpg
 3:جراد | Holger Krisp | CC BY 3.0 | https://commons.wikimedia.org/wiki/File:Locusta-migratoria-wanderheuschrecke.jpg
 3:سمان | Duncan Wright | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Brown_Quail.jpg
-3:زرزور | Anbucco at German Wikipedia
-
-(Original text: Andi Buchner) | Public domain | https://commons.wikimedia.org/wiki/File:Star_Sturnus_vulgaris.jpg
+3:زرزور | Anbucco at German Wikipedia (Original text: Andi Buchner) | Public domain | https://commons.wikimedia.org/wiki/File:Star_Sturnus_vulgaris.jpg
 3:بجعة | Rui Ornelas from Lisboa, Portugal | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Pelikan_Walvis_Bay.jpg
 3:لقلق | J.M.Garg | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Asian_Openbill_(Anastomus_oscitans)_in_Kolkata_I_IMG_0495.jpg
 3:أبو قردان | Pedro Lastra | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:Cattle_Egret_in_breeding_plumage,_Wakodahatchee_Wetlands.jpg
@@ -114,7 +106,6 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 4:ترابيزة | Sundae2Sundae at English Wikipedia | Public domain | https://commons.wikimedia.org/wiki/File:Kitchen_table.jpg
 4:غسالة | LG전자 | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:LG_드럼세탁기와_식기세척기,_영국서_물사용_효율_최우수_제품_수상.jpg
 4:لمبة | KMJ | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Gluehlampe_01_KMJ.jpg
-4:شمعة |  | CC BY 2.5 | https://commons.wikimedia.org/wiki/File:Kalenderlys-2-tsca.jpeg
 4:بطارية | en:User:Brianiac | Public domain | https://commons.wikimedia.org/wiki/File:Batteries.jpg
 4:لاب توب | https://es.ifixit.com/User/524640/Sam+Lionheart | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Macbook_Air.jpg
 4:كيبورد | R. Jason Brunson, U.S. Navy | Public domain | https://commons.wikimedia.org/wiki/File:Alphanumeric_keyboard.jpg
@@ -127,7 +118,6 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 4:سلسلة | Toni Lozano | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Broad_chain_closeup.jpg
 4:مقلاة |  | Public domain | https://commons.wikimedia.org/wiki/File:Pfanne_(Edelstahl).jpg
 4:إبريق | Unknown artistUnknown artist (Egypt) | Public domain | https://commons.wikimedia.org/wiki/File:Jug_Egypt_Louvre_OA7436.jpg
-4:ابريق | Unknown artistUnknown artist (Egypt) | Public domain | https://commons.wikimedia.org/wiki/File:Jug_Egypt_Louvre_OA7436.jpg
 4:مشط | Khalid Mahmood | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Punjabi_Comb.3.JPG
 4:ستارة | ArnoldReinhold | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Curtain.agr.jpg
 4:مكنسة | No machine-readable author provided. Fg2 assumed (based on copyright claims). | Public domain | https://commons.wikimedia.org/wiki/File:Shimogamo-Broom-M1625.jpg
@@ -158,7 +148,6 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 5:تفاح | Abhijit Tembhekar from Mumbai, India | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Red_Apple.jpg
 5:خوخ | Tobias Maschler, Plochingen, Germany Tobias | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Vineyard_peaches_de.jpg
 5:مشمش | Fir0002 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Apricots.jpg
-5:خيار | CIAT | CC BY-SA 2.0 | https://commons.wikimedia.org/wiki/File:NP_Himachal_Pradesh_60_(6347509931).jpg
 5:باذنجان | Horst Frank | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Aubergine.jpg
 5:كوسة |  | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Zucchini.jpg
 5:بامية | Earth100 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Hong_Kong_Okra_Aug_25_2012.JPG
@@ -168,7 +157,6 @@ ninara | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Struthio_Diversity.
 5:قرنبيط | Etbe | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Woolworths-cauliflower.jpg
 5:خس | Rainer Zenz | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Romaine_lettuce.jpg
 5:بقدونس | H. Zell | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Petroselinum_crispum_003.JPG
-5:عيش الغراب | Amanita_muscaria_3_vliegenzwammen_op_rij.jpg: Onderwijsgek
-derivative work: Ak ccm | CC BY-SA 3.0 nl | https://commons.wikimedia.org/wiki/File:2006-10-25_Amanita_muscaria_crop.jpg
 5:لفت | thebittenword.com | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Turnip_2622027.jpg
 5:دراجون فروت | SMasters | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Pitaya_cross_section_ed2.jpg
+5:عيش الغراب | chris_73 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:ChampignonMushroom.jpg
