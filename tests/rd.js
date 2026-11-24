@@ -41,5 +41,5 @@ const txt=pg=>pg.evaluate(()=>document.getElementById('app').innerText.replace(/
  for(let i=0;i<3;i++){let tgt;if(i===j)tgt=names[(j+1)%3];else{tgt=names.find((n,k)=>k!==j&&k!==i)}await vote(P[i],tgt);await sleep(300)}
  await sleep(3000);console.log('R2 result:',await txt(A));
  console.log('pts',await Promise.all(P.map(p=>p.evaluate(()=>localStorage.getItem('pts')))).then(x=>x.join()));
- await A.screenshot({path:'/downloads/p_final.png'});
+ await A.evaluate(()=>window.scrollTo(0,99999));await sleep(300);await A.screenshot({path:'/downloads/p_final.png'});
  await br.close();process.exit(0)})().catch(e=>{console.error('ERR',e.message);process.exit(1)});
