@@ -2,6 +2,6 @@ plugins { id 'com.android.application' }
 android {
   namespace 'com.belal.impostor'
   compileSdk 33
-  defaultConfig { applicationId 'com.belal.impostor'; minSdk 26; targetSdk 33; versionCode 19; versionName '2.17' }
+  defaultConfig { applicationId 'com.belal.impostor'; minSdk 26; targetSdk 33; versionCode 20; versionName '3.0' }
   buildTypes { release { minifyEnabled false; signingConfig signingConfigs.debug } }
 }

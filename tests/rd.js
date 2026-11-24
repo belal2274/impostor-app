@@ -18,9 +18,9 @@ const txt=pg=>pg.evaluate(()=>document.getElementById('app').innerText.replace(/
  await clickT(A,'استعداد');await clickT(B,'استعداد');await sleep(1500);console.log('after 2 ready A:',await txt(A));
  await clickT(C,'استعداد');const t0=Date.now();await sleep(900);console.log('countdown',await txt(A),'|',await txt(C));
  await sleep(3200);console.log('role phase',Date.now()-t0,await txt(B));
- for(const p of P)await p.evaluate(()=>document.querySelector('.reveal').click());
- await sleep(2800);
+ for(const p of P)await p.evaluate(()=>0);
  const isImp=await Promise.all(P.map(p=>p.evaluate(()=>!!document.querySelector('.res.imp'))));console.log('imp flags',isImp.join());
+ await sleep(10500);
  console.log('talk',await txt(A));await A.screenshot({path:'/downloads/p_talk.png'});
  const ii=isImp.indexOf(true);
  async function vote(p,name){await p.evaluate(n=>{[...document.querySelectorAll('.panel button')].find(b=>b.textContent.replace('✓ ','')===n).click()},name)}
@@ -35,8 +35,9 @@ const txt=pg=>pg.evaluate(()=>document.getElementById('app').innerText.replace(/
  await clickT(A,'الجولة الجاية');await sleep(400);await A.evaluate(()=>{[...document.querySelectorAll('.modal button')].find(b=>b.textContent.includes('نفس القسم')).click()});await sleep(4500);
  console.log('R2 hash',(await Promise.all(P.map(p=>p.evaluate(()=>location.hash)))).join(' '));
  for(const p of P)await clickT(p,'استعداد');await sleep(5000);
- for(const p of P)await p.evaluate(()=>document.querySelector('.reveal').click());await sleep(2800);
+ for(const p of P)await p.evaluate(()=>0);
  const isImp2=await Promise.all(P.map(p=>p.evaluate(()=>!!document.querySelector('.res.imp'))));const j=isImp2.indexOf(true);console.log('imp2',j);
+ await sleep(10500);
  // round2: everyone votes wrong: non-imps vote the other non-imp
  for(let i=0;i<3;i++){let tgt;if(i===j)tgt=names[(j+1)%3];else{tgt=names.find((n,k)=>k!==j&&k!==i)}await vote(P[i],tgt);await sleep(300)}
  await sleep(3000);console.log('R2 result:',await txt(A));

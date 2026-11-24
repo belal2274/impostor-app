@@ -87,3 +87,7 @@ Claim key is (room, round, cid). Different accounts, or different cids, or diffe
 ### Safe items for purchase tests (from catalog.json, current prices)
 Sticker `s1` = 10, sound `a1` = 5, frame `k1` = 10. Signup with `init:40` gives a 40 coin balance (init is capped 0..40).
 Expected: buy s1 -> pts 30; buy a1 -> 25; buy k1 -> 15; repeat any -> 200 `dup:true`, no charge; unknown id -> 400; balance below price -> 402. Read prices from catalog.json in tests rather than hardcoding them.
+
+### Reveal and voice mode (new)
+Round start: all ready -> `ca` 3 s countdown -> role shown 10 s to everyone (`rv` ms left) -> play (`el` set). The old "everyone pressed seen" gate is gone; `seen` is still accepted and ignored.
+Create with `vm:'game'|'ext'` in the host join. `dur` clamps 60..3600 s. See DEV-NOTES "Voice mode" for `tk`, `ask`, `tdone`.

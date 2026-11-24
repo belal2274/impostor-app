@@ -1,0 +1,27 @@
+const post=async(c,b)=>{const r=await fetch('http://localhost:8090/r/'+c,{method:'POST',body:JSON.stringify(b)});const t=await r.text();let j=null;try{j=JSON.parse(t)}catch(e){}return [r.status,j]};
+const ok=(n,c,x)=>console.log(c?'PASS':'FAIL',n,c?'':JSON.stringify(x));
+const sl=ms=>new Promise(r=>setTimeout(r,ms));
+(async()=>{
+const C='13222';
+await post(C,{t:'j',c:'a',host:true,vm:'game',n:'A'});await post(C,{t:'j',c:'b',n:'B'});await post(C,{t:'j',c:'c',n:'C'});
+let [,s]=await post(C,{t:'state',c:'a'});ok('vm',s.vm==='game'&&s.tk===null,s);
+for(const c of['a','b','c'])await post(C,{t:'ready',c});
+[,s]=await post(C,{t:'state',c:'a'});ok('ca',s.ca>2000&&s.ca<=3000,s.ca);
+await sl(3500);[,s]=await post(C,{t:'state',c:'a'});ok('reveal',s.rv>5000&&s.rv<=10000&&s.tk===null&&s.el===null,[s.rv,s.el]);
+await sl(s.rv+300);[,s]=await post(C,{t:'state',c:'a'});ok('go',s.tk&&s.tk.ph==='ask'&&s.el!==null,s.tk);
+const first=s.tk.a;const others=['a','b','c'].filter(x=>x!==first);
+let r=await post(C,{t:'ask',c:others[0],v:first});[,s]=await post(C,{t:'state',c:'a'});ok('non-asker ignored',!s.tk.t,s.tk);
+await post(C,{t:'ask',c:first,v:first});[,s]=await post(C,{t:'state',c:'a'});ok('self target ignored',!s.tk.t,s.tk);
+await post(C,{t:'ask',c:first,v:'zzz'});[,s]=await post(C,{t:'state',c:'a'});ok('bad target ignored',!s.tk.t,s.tk);
+await post(C,{t:'tdone',c:first});[,s]=await post(C,{t:'state',c:'a'});ok('done w/o target skips',s.tk.ph==='ask'&&s.tk.a!==first,s.tk);
+const a2=s.tk.a;const tg=['a','b','c'].find(x=>x!==a2);
+await post(C,{t:'ask',c:a2,v:tg});await post(C,{t:'tdone',c:a2});[,s]=await post(C,{t:'state',c:'a'});ok('ans phase',s.tk.ph==='ans'&&s.tk.t===tg,s.tk);
+await post(C,{t:'tdone',c:a2});[,s]=await post(C,{t:'state',c:'a'});ok('asker cant end answer',s.tk.ph==='ans',s.tk);
+await post(C,{t:'tdone',c:tg});[,s]=await post(C,{t:'state',c:'a'});ok('next asker',s.tk.ph==='ask'&&s.tk.a!==a2&&s.tk.a!==first,s.tk);
+const a3=s.tk.a;await post(C,{t:'tdone',c:a3});[,s]=await post(C,{t:'state',c:'a'});ok('disc',s.tk.ph==='disc'&&s.tk.cyc===1,s.tk);
+await post(C,{t:'tdone',c:'a'});await post(C,{t:'tdone',c:'b'});[,s]=await post(C,{t:'state',c:'a'});ok('disc needs all',s.tk.ph==='disc'&&s.tk.dn===2&&s.tk.u>200000,s.tk);await post(C,{t:'tdone',c:'c'});[,s]=await post(C,{t:'state',c:'a'});ok('cycle2',s.tk.ph==='ask'&&s.tk.cyc===2,s.tk);
+await post(C,{t:'vote',c:'a',v:'b'});[,s]=await post(C,{t:'state',c:'a'});ok('vote anytime',s.vt===1,s.vt);
+const D='13223';await post(D,{t:'j',c:'a',host:true,n:'A'});await post(D,{t:'j',c:'b',n:'B'});await post(D,{t:'j',c:'c',n:'C'});
+for(const c of['a','b','c'])await post(D,{t:'ready',c});await sl(13800);[,s]=await post(D,{t:'state',c:'a'});ok('ext mode no tk',s.vm==='ext'&&s.tk===null&&s.el!==null,[s.vm,s.tk]);
+await post(D,{t:'ask',c:'a',v:'b'});[,s]=await post(D,{t:'state',c:'a'});ok('ext ignores ask',s.tk===null,s.tk);
+})();

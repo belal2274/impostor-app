@@ -291,5 +291,15 @@
    "credit": "Copyright (c) 2011 by Brian J. Bonislawsky DBA Astigmatic (AOETI) (SIL OFL 1.1; source: google/fonts, ofl/righteous)",
    "src": "righteous"
   }
- ]
+ ],
+ "rules": {
+  "ask": 60,
+  "ans": 60,
+  "disc": 300,
+  "cap": 3600,
+  "dur_min": 1,
+  "dur_max": 60,
+  "idle_skip": true,
+  "reveal": 10
+ }
 }
