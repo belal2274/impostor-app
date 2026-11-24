@@ -21,7 +21,7 @@ for f in sorted(os.listdir(W+'img/av'),key=lambda n:(n[0],int(re.sub(r'\D','',n)
     m=re.fullmatch(r'([mwf])(\d+)\.webp',f)
     if m: av[m.group(1)].append(f[:-5])
 if err: sys.exit('\n'.join(err))
-cat={'stickers':it['stickers'],'sounds':it['sounds'],'frames':it['frames'],'avatars':av,'rules':it.get('rules',{}),'wordIcons':it.get('word_icons',{}),'posters':it.get('posters',{}),'fonts':[{k:x[k] for k in ('id','file','lang','credit')} for x in it.get('fonts',[])]}
+cat={'stickers':it['stickers'],'sounds':it['sounds'],'frames':it['frames'],'avatars':av,'rules':it.get('rules',{}),'wordIcons':it.get('word_icons',{}),'posters':it.get('posters',{}),'photos':it.get('photos',{}),'fonts':[{k:x[k] for k in ('id','file','lang','credit')} for x in it.get('fonts',[])]}
 open(W+'catalog.js','w',encoding='utf8').write('var CATALOG='+json.dumps(cat,ensure_ascii=False)+';\n')
 out={k:[{'id':x['id'],'price':x['price']} for x in cat[k]] for k in ('stickers','sounds','frames')};out['rules']=cat['rules']
 json.dump(out,open('catalog.json','w'),indent=1)

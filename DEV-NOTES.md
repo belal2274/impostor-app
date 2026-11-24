@@ -27,3 +27,9 @@ Server state (`stateOf`): `vm`, `rv` (ms left of reveal, else null), `tk` = `{ph
 Messages: `{t:'ask', c, v:target}` (asker only, target must be another player), `{t:'tdone', c}`: asker with a target -> answer phase; asker without target -> skip; target during `ans` -> next turn; any player in `disc` marks done (all done -> next cycle). Ask with no target at timeout or target gone -> skipped. After the last asker, `disc`, then a new cycle. Votes are open at any time.
 Mic gating is enforced by the app only (the server only owns the turn state).
 Tests: tests/vm.js (http state machine), tests/vmui.js (3 browsers, fake mic).
+
+## Word photos (Wikimedia Commons)
+- items.json: `photos` maps "<catId>:<word>" to a file stem in www/img/words/<stem>.jpg (300px JPEG); `photo_credits` records page, file, author, license, source per photo; `rules.photos` is the one switch (false removes all word photos and the About credit line). www/photo-credits.txt ships the credits.
+- Movies use `posters` (TMDB, `rules.posters`). Priority in the role card: poster (movies) > photo > word_icons/inline emoji > category icon.
+- To add a photo: drop a file in www/img/words, add entries to `photos` and `photo_credits`, run scripts/make_catalog.py. Verify the photo matches the word by eye.
+- Category words (client index.html CATS): the 2026-11-25 review removed series/plays from movies (93 left), unknown foods (97 left), animals without emoji or photo (99), plants pruned to basics plus trending (52). Random category untouched.
