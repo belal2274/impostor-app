@@ -69,13 +69,21 @@ async function fillRoom(base, { n, rounds = 3, dur = 180, cat = 1, code = roomCo
   return { code, cids, users, imp: imps[0], leader: cids[0], close: () => ls.forEach((l) => l.close()) };
 }
 
-// ready -> countdown -> seen. After this the round clock runs and votes/fx are accepted.
+// ready -> countdown (ca) -> 10 s role reveal (rv) -> play. The round clock `el` becomes non-null when play starts.
+// Votes and fx are accepted only after that, so poll state until el is set (up to 13 s after the countdown).
+// `seen` is accepted and ignored by the server, so it is not sent.
 async function startClock(base, room) {
   let last;
   for (const c of room.cids) last = await post(base, room.code, { t: 'ready', c });
   const ca = (last.json && last.json.ca) || 3000;
   await sleep(ca + 200);
-  for (const c of room.cids) await post(base, room.code, { t: 'seen', c });
+  const deadline = Date.now() + 13000;
+  for (;;) {
+    const st = await post(base, room.code, { t: 'state', c: room.leader, s: 0 });
+    if (st.json && st.json.el !== null && st.json.el !== undefined) return;
+    if (Date.now() > deadline) throw new Error('round clock did not start: ' + st.text);
+    await sleep(300);
+  }
 }
 
 const state = (base, room, c = room.leader, s = 0) => post(base, room.code, { t: 'state', c, s });
