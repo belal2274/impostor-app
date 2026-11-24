@@ -1,0 +1,193 @@
+{
+  "_doc": "Room cases. Edit data to add cases; the tests iterate over it.",
+  "hostSettings": [
+    {
+      "name": "defaults when omitted",
+      "send": {},
+      "expect": {
+        "rounds": 3,
+        "dur": 180
+      }
+    },
+    {
+      "name": "below minimum",
+      "send": {
+        "rounds": -1,
+        "dur": 59
+      },
+      "expect": {
+        "rounds": 1,
+        "dur": 60
+      }
+    },
+    {
+      "name": "at minimum",
+      "send": {
+        "rounds": 1,
+        "dur": 60
+      },
+      "expect": {
+        "rounds": 1,
+        "dur": 60
+      }
+    },
+    {
+      "name": "at maximum",
+      "send": {
+        "rounds": 20,
+        "dur": 900
+      },
+      "expect": {
+        "rounds": 20,
+        "dur": 900
+      }
+    },
+    {
+      "name": "above maximum",
+      "send": {
+        "rounds": 21,
+        "dur": 901
+      },
+      "expect": {
+        "rounds": 20,
+        "dur": 900
+      }
+    },
+    {
+      "name": "non-integers are floored",
+      "send": {
+        "rounds": 2.9,
+        "dur": 90.9
+      },
+      "expect": {
+        "rounds": 2,
+        "dur": 90
+      }
+    },
+    {
+      "name": "non-numeric falls back to defaults",
+      "send": {
+        "rounds": "x",
+        "dur": "y"
+      },
+      "expect": {
+        "rounds": 3,
+        "dur": 180
+      }
+    },
+    {
+      "name": "rounds 0 clamps to 1",
+      "send": {
+        "rounds": 0
+      },
+      "expect": {
+        "rounds": 1,
+        "dur": 180
+      }
+    },
+    {
+      "name": "dur 0 clamps to 60",
+      "send": {
+        "dur": 0
+      },
+      "expect": {
+        "rounds": 3,
+        "dur": 60
+      }
+    }
+  ],
+  "playerCounts": {
+    "ok": [
+      2,
+      9
+    ],
+    "rejectedWith404": [
+      0,
+      1
+    ]
+  },
+  "scoringScenarios": [
+    {
+      "name": "2 players, voter picks",
+      "n": 2,
+      "picks": 1,
+      "wrong": 0,
+      "none": 0,
+      "impVote": "none"
+    },
+    {
+      "name": "2 players, voter abstains",
+      "n": 2,
+      "picks": 0,
+      "wrong": 0,
+      "none": 1,
+      "impVote": "none"
+    },
+    {
+      "name": "3 players, one picks one wrong",
+      "n": 3,
+      "picks": 1,
+      "wrong": 1,
+      "none": 0,
+      "impVote": "none"
+    },
+    {
+      "name": "3 players, both pick",
+      "n": 3,
+      "picks": 2,
+      "wrong": 0,
+      "none": 0,
+      "impVote": "nonimp"
+    },
+    {
+      "name": "4 players, two pick one abstains",
+      "n": 4,
+      "picks": 2,
+      "wrong": 0,
+      "none": 1,
+      "impVote": "none"
+    },
+    {
+      "name": "5 players, two pick one wrong one abstains, impostor votes",
+      "n": 5,
+      "picks": 2,
+      "wrong": 1,
+      "none": 1,
+      "impVote": "nonimp"
+    },
+    {
+      "name": "5 players, all pick",
+      "n": 5,
+      "picks": 4,
+      "wrong": 0,
+      "none": 0,
+      "impVote": "none"
+    },
+    {
+      "name": "6 players, nobody picks",
+      "n": 6,
+      "picks": 0,
+      "wrong": 5,
+      "none": 0,
+      "impVote": "none"
+    },
+    {
+      "name": "9 players mixed",
+      "n": 9,
+      "picks": 3,
+      "wrong": 3,
+      "none": 2,
+      "impVote": "nonimp"
+    }
+  ],
+  "cooldown": {
+    "firstItem": "s1",
+    "otherItem": "a1",
+    "waitAfterRejectMs": 1500,
+    "waitAfterAcceptMs": 3100,
+    "badIds": [
+      "x1",
+      "s999999"
+    ]
+  }
+}
