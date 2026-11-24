@@ -35,22 +35,22 @@
       "name": "at maximum",
       "send": {
         "rounds": 20,
-        "dur": 900
+        "dur": 3600
       },
       "expect": {
         "rounds": 20,
-        "dur": 900
+        "dur": 3600
       }
     },
     {
       "name": "above maximum",
       "send": {
         "rounds": 21,
-        "dur": 901
+        "dur": 3601
       },
       "expect": {
         "rounds": 20,
-        "dur": 900
+        "dur": 3600
       }
     },
     {
@@ -93,6 +93,36 @@
       "expect": {
         "rounds": 3,
         "dur": 60
+      }
+    },
+    {
+      "name": "dur 900 is below the new maximum",
+      "send": {
+        "dur": 900
+      },
+      "expect": {
+        "rounds": 3,
+        "dur": 900
+      }
+    },
+    {
+      "name": "dur 5000 clamps to 3600",
+      "send": {
+        "dur": 5000
+      },
+      "expect": {
+        "rounds": 3,
+        "dur": 3600
+      }
+    },
+    {
+      "name": "rounds 99 clamps to 20",
+      "send": {
+        "rounds": 99
+      },
+      "expect": {
+        "rounds": 20,
+        "dur": 180
       }
     }
   ],
