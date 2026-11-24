@@ -1,0 +1,48 @@
+{
+  "_doc": "Scoring rules and hand-computed cases. Expected values are written by hand from docs/TEST-CONTRACT.md, not produced by code. Add a case by adding an object; no test code changes.",
+  "rules": { "pickImpostor": 2, "pickOther": -1, "noVote": -2, "bigRoomMinPlayers": 5, "smallRoomBase": 5, "winnerBonusPool": 10 },
+  "rounds": [
+    { "name": "4 players, 2 pick the impostor", "ids": ["a","b","c","d"], "impostor": "d",
+      "votes": { "a": "d", "b": "d", "c": "a", "d": "a" },
+      "expect": { "a": 2, "b": 2, "c": -1, "d": 3 }, "discovered": false },
+    { "name": "4 players, everyone picks the impostor", "ids": ["a","b","c","d"], "impostor": "d",
+      "votes": { "a": "d", "b": "d", "c": "d", "d": "a" },
+      "expect": { "a": 2, "b": 2, "c": 2, "d": -3 }, "discovered": true },
+    { "name": "4 players, impostor tally is a single top", "ids": ["a","b","c","d"], "impostor": "d",
+      "votes": { "a": "d", "b": "d", "c": "d", "d": "a" },
+      "expect": { "a": 2, "b": 2, "c": 2, "d": -3 }, "discovered": true },
+    { "name": "5 players, 2 pick, one abstains, impostor votes", "ids": ["a","b","c","d","e"], "impostor": "e",
+      "votes": { "a": "e", "b": "e", "c": "a", "e": "a" },
+      "expect": { "a": 2, "b": 2, "c": -1, "d": -2, "e": 0 }, "discovered": false },
+    { "name": "6 players, nobody picks the impostor", "ids": ["a","b","c","d","e","f"], "impostor": "f",
+      "votes": { "a": "b", "b": "a", "c": "a", "d": "a", "e": "a", "f": "a" },
+      "expect": { "a": -1, "b": -1, "c": -1, "d": -1, "e": -1, "f": 5 }, "discovered": false },
+    { "name": "5 players, everyone picks the impostor", "ids": ["a","b","c","d","e"], "impostor": "e",
+      "votes": { "a": "e", "b": "e", "c": "e", "d": "e" },
+      "expect": { "a": 2, "b": 2, "c": 2, "d": 2, "e": -4 }, "discovered": true },
+    { "name": "2 players, the voter picks the impostor", "ids": ["a","b"], "impostor": "b",
+      "votes": { "a": "b" },
+      "expect": { "a": 2, "b": -1 }, "discovered": true },
+    { "name": "2 players, the voter does not vote", "ids": ["a","b"], "impostor": "b",
+      "votes": {},
+      "expect": { "a": -2, "b": 5 }, "discovered": false },
+    { "name": "3 players, all abstain", "ids": ["a","b","c"], "impostor": "c",
+      "votes": {},
+      "expect": { "a": -2, "b": -2, "c": 5 }, "discovered": false }
+  ],
+  "winners": [
+    { "name": "single winner", "totals": { "a": 7, "b": 3, "c": 1 }, "winners": ["a"], "bonus": 10 },
+    { "name": "two tied winners", "totals": { "a": 5, "b": 5, "c": 1 }, "winners": ["a","b"], "bonus": 5 },
+    { "name": "three tied winners", "totals": { "a": 4, "b": 4, "c": 4, "d": 0 }, "winners": ["a","b","c"], "bonus": 3 },
+    { "name": "all zero means all win (4 players)", "totals": { "a": 0, "b": 0, "c": 0, "d": 0 }, "winners": ["a","b","c","d"], "bonus": 2 },
+    { "name": "9 players all tied", "totals": { "a": 1, "b": 1, "c": 1, "d": 1, "e": 1, "f": 1, "g": 1, "h": 1, "i": 1 }, "winners": ["a","b","c","d","e","f","g","h","i"], "bonus": 1 },
+    { "name": "negative totals, highest wins", "totals": { "a": -1, "b": -4 }, "winners": ["a"], "bonus": 10 }
+  ],
+  "claimBalance": [
+    { "name": "floor applies before bonus, loss", "pts": 3, "roundPoints": -5, "bonus": 0, "expect": 0 },
+    { "name": "floor then bonus", "pts": 3, "roundPoints": -5, "bonus": 10, "expect": 10 },
+    { "name": "plain gain", "pts": 3, "roundPoints": 2, "bonus": 0, "expect": 5 },
+    { "name": "from zero with loss and bonus", "pts": 0, "roundPoints": -2, "bonus": 5, "expect": 5 },
+    { "name": "exact zero", "pts": 4, "roundPoints": -4, "bonus": 0, "expect": 0 }
+  ]
+}
