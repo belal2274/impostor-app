@@ -5,7 +5,7 @@ No secrets here. The random category is out of scope for tests and must not be t
 - Runtime: Node >= 18, no dependencies. `server.js` listens on load (it exports nothing), so tests start it as a child process: `PORT=<free port> node server.js`.
 - Do not set SUPA_URL / SUPA_KEY. Without them accounts live in memory (same code path, fake store). No external network is needed.
 - Health: `GET /health` returns 200.
-- Existing tests: puppeteer browser tests are in impostor-app tests/ (need local Chrome). The server repo has none. A dependency-free `node:test` suite under `tests/**` using fetch against the child process is fine. One PR per repo to `dev`.
+- Existing tests in the repo: none. My puppeteer tests are outside the repo. A dependency-free `node:test` suite under `tests/**` using fetch against the child process is fine. One PR per repo to `dev`.
 - Do not edit: server.js, catalog.json, scripts/**. Add only new files under tests/** and docs/**.
 - Rate limit: `/acc` is limited to 60 requests/min per IP, so keep per-test request counts low or space them.
 

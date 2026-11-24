@@ -184,6 +184,19 @@ function avPool(g){return g==='m'?AVC.m.concat(AVC.f):g==='w'?AVC.w.concat(AVC.f
 function avRoll(g){var P=avPool(g);return P[Math.floor(Math.random()*P.length)]}
 function cleanA(a){a=String(a||'');if(a.length>4100)return '';var m=/^(.*?)(~k(\d{1,2}))?$/.exec(a),b=m[1],f=m[3]?+m[3]:0;if(!(b===''||/^e:[a-z0-9]{1,6}$/.test(b)||(b.indexOf('data:image/jpeg;base64,')===0&&/^[A-Za-z0-9+\/=:;,]+$/.test(b))))b='';if(f<1||f>FRM.n)f=0;return b+(f?'~k'+f:'')}
 function myPic(){return pphoto()||myAv()||'e:m5'}
+
+var NFI={};(CATALOG.fonts||[]).forEach(function(x){NFI[x.id]=x});
+(function(){var c='';(CATALOG.fonts||[]).forEach(function(x){c+="@font-face{font-family:'NF"+x.id+"';src:url(fonts/"+x.file+") format('woff');font-display:swap}.nf-"+x.id+"{font-family:'NF"+x.id+"',"+getComputedStyle(document.body).fontFamily+"}"});var st=document.createElement('style');st.textContent=c;document.head.appendChild(st)})();
+function nfMap(){var m={},R=parse();var me=pname();if(me&&myFont())m[me]=myFont();
+  function add(l){(l||[]).forEach(function(x){if(x&&x.n&&x.f&&NFI[x.f])m[x.n]=x.f})}
+  if(typeof LB!=='undefined')add(LB.roster);
+  if(R){try{var c=JSON.parse(ls('ros.'+R.code)||'null');if(c)add(c.r)}catch(e){}}
+  return m}
+function applyNameFonts(){var m=nfMap(),ks=Object.keys(m).sort(function(a,b){return b.length-a.length});if(!ks.length)return;
+  [app,ov].forEach(function(root){if(!root)return;var w=document.createTreeWalker(root,NodeFilter.SHOW_TEXT),nodes=[],n;while((n=w.nextNode()))nodes.push(n);
+    nodes.forEach(function(t){var p=t.parentNode;if(!p||p.nodeName==='TEXTAREA'||p.nodeName==='SCRIPT'||(p.className&&String(p.className).indexOf('nfw')>=0))return;var tx=t.nodeValue;var hit=null;for(var i=0;i<ks.length;i++){var ix=tx.indexOf(ks[i]);if(ix>=0){hit=[ks[i],ix];break}}if(!hit)return;
+      var nm=hit[0],ix=hit[1],f=document.createDocumentFragment();if(ix>0)f.appendChild(document.createTextNode(tx.slice(0,ix)));var sp=document.createElement('span');sp.className='nfw nf-'+m[nm];sp.textContent=nm;f.appendChild(sp);var rest=tx.slice(ix+nm.length);if(rest)f.appendChild(document.createTextNode(rest));p.replaceChild(f,t)})})}
+function myFont(){var f=ls('pfont');return(f&&NFI[f])?f:''}
 function myFr(){var f=ls('pfr');return(f&&fxHas(f))?'~'+f:''}
 function myFull(){return(pphoto()||myAv())+myFr()}
 function myAv(){var a=ls('pav');if(!a&&!pphoto()&&pname()){a=avRoll(ls('pgen')||'');ls('pav',a)}return(!pphoto()&&a)?'e:'+a:''}
@@ -207,14 +220,14 @@ function cachedRoster(R){try{var o=JSON.parse(ls('ros.'+R.code));if(o&&Date.now(
 var LB={role:null,gone:false,slow:false,conn:false,code:null,iv:null,roster:[],err:false,pub:false,sig:''};
 function stopLobby(){clearTimeout(LB.pt);if(LB.es){LB.es.close();LB.es=null}LB.code=null;LB.role=null;LB.gone=false;LB.slow=false;clearTimeout(LB.st);LB.conn=false;LB.pub=false;LB.sig='';LB.roster=[]}
 function send(code,obj){return fetch(topic(code),{method:'POST',body:JSON.stringify(obj)})}
-function applyMsg(ros,d){if(!d||!d.c)return;var i=ros.findIndex(function(x){return x.c===d.c});if(d.t==='l'){if(i>=0)ros.splice(i,1);return}if(d.t!=='j'||i>=0)return;var a=String(d.a||'');a=cleanA(a);var nm=String(d.n||'').slice(0,14)||'?',k=1,base=nm;while(ros.some(function(x){return x.n===nm})){k++;nm=base+' '+k}ros.push({v:d.v==='fam'?'fam':'full',c:String(d.c).slice(0,20),n:nm,a:a})}
+function applyMsg(ros,d){if(!d||!d.c)return;var i=ros.findIndex(function(x){return x.c===d.c});if(d.t==='l'){if(i>=0)ros.splice(i,1);return}if(d.t!=='j'||i>=0)return;var a=String(d.a||'');a=cleanA(a);var nm=String(d.n||'').slice(0,14)||'?',k=1,base=nm;while(ros.some(function(x){return x.n===nm})){k++;nm=base+' '+k}ros.push({v:d.v==='fam'?'fam':'full',c:String(d.c).slice(0,20),n:nm,a:a,f:(NFI[d.f]?d.f:'')})}
 function evalLobby(R){
   if(LB.code!==R.code)return;var ros=LB.roster,mine=ros.some(function(x){return x.c===CID});
   if(ros.length>=R.n){var f=ros.slice(0,R.n);if(f.some(function(x){return x.c===CID})){if(!LB.role){var sg0=ros.map(function(x){return x.c}).join()+'|w';if(sg0!==LB.sig){LB.sig=sg0}return}ls('ros.'+R.code,JSON.stringify({t:Date.now(),r:f,role:LB.role}));stopLobby();shown=false;vib(120);beep(660,.2);draw();return}}
   var sig=ros.map(function(x){return x.c}).join()+'|'+mine+'|'+ros.length+'|'+LB.err+'|'+LB.conn+'|'+LB.gone+'|'+LB.slow;if(sig!==LB.sig){LB.sig=sig;draw()}}
 function startLobby(R){if(LB.code===R.code)return;stopLobby();LB.code=R.code;
   LB.st=setTimeout(function(){if(LB.code===R.code&&!LB.conn){LB.slow=true;evalLobby(R)}},6000);
-  var th=ls('pthumb')||'',me={t:'j',v:(ED==='family'?'fam':'full'),c:CID,u:accName(),n:pname(),a:(th&&th.length<3600?th:myAv())+myFr()};
+  var th=ls('pthumb')||'',me={t:'j',v:(ED==='family'?'fam':'full'),c:CID,u:accName(),f:myFont(),n:pname(),a:(th&&th.length<3600?th:myAv())+myFr()};
   function connect(){if(LB.code!==R.code)return;
     var es=new EventSource(topic(R.code)+'?c='+encodeURIComponent(CID));LB.es=es;
     es.addEventListener('open',function(){if(LB.code!==R.code)return;LB.err=false;LB.conn=true;LB.roster=[];clearTimeout(LB.pt);
@@ -239,6 +252,11 @@ function profile(next){
   pb.onclick=function(){vib();fi.click()};app.appendChild(pb);app.appendChild(fi);
   var p=el('div','panel');p.appendChild(el('div','sec','اسمك'));var f=el('input','nm');f.maxLength=14;f.placeholder='اكتب اسمك';f.value=nm;f.oninput=function(){nm=f.value;if(!ph)paint()};p.appendChild(f);
   var err=el('div','err');p.appendChild(err);app.appendChild(p);
+  var fpn2=el('div','panel');fpn2.appendChild(el('div','sec','خط الاسم'));var fr2=el('div');fr2.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center';
+  var curF=ls('pfont')||'';
+  function fchips(){fr2.innerHTML='';var o=el('button','chip','عادي');o.style.opacity=curF?0.6:1;o.onclick=function(){curF='';ls('pfont',null);fchips()};fr2.appendChild(o);
+    (CATALOG.fonts||[]).forEach(function(x){var b=el('button','chip nfw nf-'+x.id,(x.lang==='ar'?(nm||'أحمد'):'Belal').slice(0,14));b.style.cssText+=';font-size:20px;padding:6px 14px;opacity:'+(curF===x.id?1:0.6)+(curF===x.id?';outline:2px solid #a58bff':'');b.onclick=function(){curF=x.id;ls('pfont',x.id);vib(15);fchips()};fr2.appendChild(b)})}
+  fchips();fpn2.appendChild(fr2);app.appendChild(fpn2);
   var gp=el('div','panel');gp.appendChild(el('div','sec','النوع (عشان الأفاتار)'));var gr=el('div','grow2');var gb1=el('button','gbt','ذكر'),gb2=el('button','gbt','أنثى');
   function gset(){gb1.className='gbt'+(gn==='m'?' on':'');gb2.className='gbt'+(gn==='w'?' on':'')}gset();
   function gpick(v){gn=v;if(avPool(gn).indexOf(avId)<0)avId=avRoll(gn);gset();paint()}
@@ -317,9 +335,20 @@ function settings(){
   a18.appendChild(el('p','sub',st?'متفعّل على الجهاز ده.':'مقفول لحد ما تأكد إن عمرك 18+.'));
   if(st){var r=el('button','ghost','قفل قسم +18');r.onclick=function(){ls('adult',null);settings()};a18.appendChild(r)}
   app.appendChild(a18);
-  var cr=el('p','sub','الأفاتارات: Noto Emoji من Google، رخصة Apache 2.0 / SIL OFL 1.1 (ملفات الرخصة في التطبيق: LICENSE-noto-emoji.txt و LICENSE-apache-2.0.txt).');cr.style.fontSize='12px';app.appendChild(cr);
+  var ab=el('button','ghost','عن التطبيق والرخص');ab.onclick=aboutScreen;app.appendChild(ab);
   var ob=el('button','ghost','شاهد الشرح تاني');ob.onclick=function(){obi=0;screen='ob';draw()};app.appendChild(ob);
   app.appendChild(el('div','foot','BMF Impostor · الإصدار 2.17'))}
+
+function aboutScreen(){var m=el('div','modal'),p=el('div','panel');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');p.style.cssText='max-height:80vh;overflow:auto;text-align:right';
+  p.appendChild(el('h3',0,'عن التطبيق والرخص'));
+  function sec(t,x){p.appendChild(el('div','sw',t));var q=el('p','sub',x);q.style.fontSize='13px';q.style.direction='ltr';q.style.textAlign='left';q.style.whiteSpace='pre-wrap';p.appendChild(q)}
+  sec('Emoji font (Noto Color Emoji)','Copyright 2022 Google Inc. Licensed under the SIL Open Font License 1.1 (see LICENSE-noto-emoji.txt). Used as an embedded subset.');
+  sec('Avatar images (Noto Emoji)','Noto Emoji images by Google, from github.com/googlefonts/noto-emoji. Licensed under the Apache License 2.0 (see LICENSE-apache-2.0.txt). Resized and converted to WebP.');
+  function lic(t,f){var b=el('button','ghost',t);b.onclick=function(){var x=new XMLHttpRequest();x.open('GET',f);x.onload=function(){var pre=el('pre',0,x.responseText||f);pre.style.cssText='font-size:10px;white-space:pre-wrap;direction:ltr;text-align:left;max-height:50vh;overflow:auto';ov.innerHTML='';var m2=el('div','modal'),p2=el('div','panel');p2.appendChild(el('h3',0,t));p2.appendChild(pre);var c=el('button','btn','رجوع');c.onclick=aboutScreen;p2.appendChild(c);m2.appendChild(p2);ov.appendChild(m2)};x.onerror=function(){b.textContent=t+' ('+f+')'};x.send()};p.appendChild(b)}
+  (CATALOG.fonts||[]).forEach(function(x){});
+  sec('Name fonts (SIL OFL 1.1, subset)',(CATALOG.fonts||[]).map(function(x){return x.credit}).join('\n'));
+  lic('نص رخصة OFL 1.1','LICENSE-noto-emoji.txt');lic('نص رخصة Apache 2.0','LICENSE-apache-2.0.txt');
+  var c=el('button','btn','تمام');c.onclick=closeModal;p.appendChild(c);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 var TM={code:null,k:0,n:0,rd:0,rm:false,endCd:null,st:null,vt:0,mine:null,res:null,round:1,rounds:3,lead:'',iv:null,pl:null,t:180,end:false,ph:'ready',cds:-1,reset:false,sig:''};
 function fmt(t){var m=Math.floor(t/60),x=t%60;return m+':'+(x<10?'0':'')+x}
 function tmPhase(){if(TM.res)return 'res';if(TM.st!==null)return 'talk';if(TM.endCd!==null)return Date.now()>=TM.endCd?'role':'cd';return 'ready'}
@@ -617,6 +646,7 @@ window.__back=function(){if(ov.innerHTML){closeModal();return true}if(screen==='
 var sp=el('div','splash');sp.appendChild((function(){var l=el('img','mk');l.src='img/mark.png';l.style.width='190px';l.style.height='190px';return l})());document.body.appendChild(sp);
 setTimeout(function(){sp.style.opacity=0;setTimeout(function(){sp.remove()},400)},900);
 if(pname())startInbox();
+(function(){var d0=draw;draw=function(){d0.apply(this,arguments);try{applyNameFonts()}catch(e){}}})();
 draw();
 })();
 </script></body></html>

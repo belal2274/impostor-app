@@ -13,3 +13,5 @@ Edit `items.json`, then run `python3 scripts/make_catalog.py` (writes www/catalo
 - Avatar: drop m*/w*/f*.webp in www/img/av, rerun the script.
 - Words: data/categories.json (never the random category).
 - Prices: change the number in items.json and rerun.
+- Name font: put the subset .woff in www/fonts, add `{id:"f<N>", file, lang:"ar"|"en", credit}` to items.json, rerun the script. The About screen lists the credit lines automatically.
+- Forgotten password: see bmf-lobby DEV-NOTES.md (owner-only script).

@@ -212,5 +212,84 @@
    "name": "إمبراطور الظلام",
    "price": 700
   }
+ ],
+ "fonts": [
+  {
+   "id": "f1",
+   "file": "nf1.woff",
+   "lang": "ar",
+   "credit": "Copyright 2015 The Lalezar Project Authors (https://github.com/BornaIz/Lalezar) (SIL OFL 1.1; source: google/fonts, ofl/lalezar)",
+   "src": "lalezar"
+  },
+  {
+   "id": "f2",
+   "file": "nf2.woff",
+   "lang": "ar",
+   "credit": "Copyright 2011 The Lemonada Project Authors (https://github.com/Gue3bara/Lemonada) (SIL OFL 1.1; source: google/fonts, ofl/lemonada)",
+   "src": "lemonada"
+  },
+  {
+   "id": "f3",
+   "file": "nf3.woff",
+   "lang": "ar",
+   "credit": "Copyright 2015-2022 The Reem Kufi Project Authors (https://github.com/aliftype/reem-kufi) (SIL OFL 1.1; source: google/fonts, ofl/reemkufi)",
+   "src": "reemkufi"
+  },
+  {
+   "id": "f4",
+   "file": "nf4.woff",
+   "lang": "ar",
+   "credit": "Copyright 2015-2020 The Aref Ruqaa Project Authors (https://github.com/alif-type/aref-ruqaa) (SIL OFL 1.1; source: google/fonts, ofl/arefruqaa)",
+   "src": "arefruqaa"
+  },
+  {
+   "id": "f5",
+   "file": "nf5.woff",
+   "lang": "ar",
+   "credit": "Copyright 2015 The El Messiri Project Authors (https://github.com/Gue3bara/El-Messiri) (SIL OFL 1.1; source: google/fonts, ofl/elmessiri)",
+   "src": "elmessiri"
+  },
+  {
+   "id": "f6",
+   "file": "nf6.woff",
+   "lang": "ar",
+   "credit": "Copyright 2009 The Cairo Project Authors (https://github.com/Gue3bara/Cairo) (SIL OFL 1.1; source: google/fonts, ofl/cairo)",
+   "src": "cairo"
+  },
+  {
+   "id": "f7",
+   "file": "nf7.woff",
+   "lang": "ar",
+   "credit": "Copyright 2015-2022 The Mada Project Authors (https://github.com/aliftype/mada) (SIL OFL 1.1; source: google/fonts, ofl/mada)",
+   "src": "mada"
+  },
+  {
+   "id": "f8",
+   "file": "nf8.woff",
+   "lang": "en",
+   "credit": "Copyright 2018 The Pacifico Project Authors (https://github.com/googlefonts/Pacifico) (SIL OFL 1.1; source: google/fonts, ofl/pacifico)",
+   "src": "pacifico"
+  },
+  {
+   "id": "f9",
+   "file": "nf9.woff",
+   "lang": "en",
+   "credit": "Copyright 2010 The Lobster Project Authors (https://github.com/impallari/The-Lobster-Font) (SIL OFL 1.1; source: google/fonts, ofl/lobster)",
+   "src": "lobster"
+  },
+  {
+   "id": "f10",
+   "file": "nf10.woff",
+   "lang": "en",
+   "credit": "Copyright 2010 The Bangers Project Authors (https://github.com/googlefonts/bangers) (SIL OFL 1.1; source: google/fonts, ofl/bangers)",
+   "src": "bangers"
+  },
+  {
+   "id": "f11",
+   "file": "nf11.woff",
+   "lang": "en",
+   "credit": "Copyright (c) 2011 by Brian J. Bonislawsky DBA Astigmatic (AOETI) (SIL OFL 1.1; source: google/fonts, ofl/righteous)",
+   "src": "righteous"
+  }
  ]
 }
