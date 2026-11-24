@@ -1,0 +1,18 @@
+{
+  "_doc": "Constants and cases for tests/accounts.test.js. Change data here, not in the test code.",
+  "initClamp": [
+    { "init": -5, "expectPts": 0 },
+    { "init": 0, "expectPts": 0 },
+    { "init": 25, "expectPts": 25 },
+    { "init": 40, "expectPts": 40 },
+    { "init": 41, "expectPts": 40 },
+    { "init": 1000, "expectPts": 40 }
+  ],
+  "password": { "min": 6, "max": 64 },
+  "newPasswordRejected": [
+    { "label": "5 chars", "length": 5 },
+    { "label": "65 chars", "length": 65 }
+  ],
+  "loginLock": { "failsAllowed": 8, "windowMinutes": 10, "status": 429 },
+  "statuses": { "ok": 200, "badRequest": 400, "forbidden": 403, "notFound": 404, "conflict": 409, "paymentRequired": 402 }
+}
