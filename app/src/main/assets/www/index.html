@@ -301,8 +301,7 @@ function html(t,c,x){var e=el(t,c);e.innerHTML=x;return e}
 function grad(i){return 'linear-gradient(135deg,'+COL[i][0]+','+COL[i][1]+')'}
 function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<2)return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
 function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
-function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:null,t:w}}
-function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
+function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:((window.CATALOG&&CATALOG.wordIcons)||{})[w]||null,t:w}} function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
 function closeModal(){ov.innerHTML=''}
 function adultGate(cb){
   var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');

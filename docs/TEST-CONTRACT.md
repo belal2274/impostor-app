@@ -91,3 +91,14 @@ Expected: buy s1 -> pts 30; buy a1 -> 25; buy k1 -> 15; repeat any -> 200 `dup:t
 ### Reveal and voice mode (new)
 Round start: all ready -> `ca` 3 s countdown -> role shown 10 s to everyone (`rv` ms left) -> play (`el` set). The old "everyone pressed seen" gate is gone; `seen` is still accepted and ignored.
 Create with `vm:'game'|'ext'` in the host join. `dur` clamps 60..3600 s. See DEV-NOTES "Voice mode" for `tk`, `ask`, `tdone`.
+
+### Voice mode contract (vm='game')
+State fields (stateOf): `vm` 'ext'|'game'; `rv` ms left of the 10 s reveal (null otherwise); `tk` (null in ext mode, before play, and after the result) = `{ph:'ask'|'ans'|'disc', a, t, u, cyc, dn, dm}`:
+- `a` = cid of the asker (null in `disc`). Tests must read it from `tk.a`; do not assume roster order.
+- `t` = cid of the chosen target, `null` when unset (also null in `disc`).
+- `u` = ms left in this phase. `cyc` starts at 1 and goes up by 1 on each new ask cycle. `dn` = number of players done in `disc` (0 in other phases). `dm` = true when the requesting cid is already done.
+Messages (always 200 with the current state JSON, never an error; invalid ones change nothing):
+- `{t:'ask', c, v}`: only the current asker in phase `ask`, target must be another cid in the roster. A repeated valid ask replaces the target until `tdone`. Ignored: non-asker, self, unknown cid, phase `ans`/`disc`, ext mode, after the result.
+- `{t:'tdone', c}`: asker with a target in `ask` -> `ans`. Asker without a target in `ask` -> skips to the next asker. Target in `ans` -> next asker (the asker cannot end the answer). Any player in `disc` marks done; when every player is done -> next cycle (`cyc`+1, first asker again). Uninvolved player in `ask`/`ans`, ext mode: ignored.
+Timing is real time from `rules` in catalog.json: ask 60, ans 60, disc 300 (all mics), cap 3600 (round auto-resolves). Phases also advance when time runs out (no target at expiry -> skip). There is no separate 15 s skip. A target that left is not detected: that answer phase simply runs to its timeout. Votes are accepted in every phase and finish the round as usual. `dur` is still stored and returned in state in game mode but does not end the round; only votes, leader close or the cap do.
+Testing real expiry: copy server.js and catalog.json to a temp dir with shortened `rules` (e.g. reveal 1, ask 2, ans 2, disc 3, cap 8) and start that copy. The server reads catalog.json from its own directory, so no code change is needed. Mic gating is client-side only and is not testable at server level.
