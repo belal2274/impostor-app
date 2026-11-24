@@ -1,0 +1,9 @@
+const p=require('puppeteer-core');(async()=>{const b=await p.launch({executablePath:'/usr/bin/google-chrome',args:['--no-sandbox']});const pg=await b.newPage();await pg.setViewport({width:390,height:800});
+pg.on('pageerror',e=>console.log('ERR',e.message));
+await pg.goto('http://localhost:8095/index.html');await pg.evaluate(()=>{localStorage.setItem('pname','بلال');localStorage.setItem('adult','1');localStorage.setItem('ob','1')});await pg.reload();
+await new Promise(r=>setTimeout(r,800));
+await pg.evaluate(()=>document.querySelector('.chip').onclick());await new Promise(r=>setTimeout(r,500));console.log((await pg.evaluate(()=>document.body.innerText)).slice(0,200));await pg.screenshot({path:'/tmp/av1.png'});
+await pg.evaluate(()=>{document.querySelectorAll('.gbt')[1].click()});await new Promise(r=>setTimeout(r,300));await pg.screenshot({path:'/tmp/av2.png'});
+await pg.evaluate(()=>{[...document.querySelectorAll('button')].find(x=>x.textContent=='حفظ').click()});await new Promise(r=>setTimeout(r,500));await pg.screenshot({path:'/tmp/av3.png'});
+const ids=Object.values(require('/tmp/em2/av.json')).flat();await pg.evaluate((ids)=>{var d=document.createElement('div');d.style.cssText='position:fixed;inset:0;background:#fff;z-index:99;display:flex;flex-wrap:wrap;gap:4px;padding:4px;overflow:auto';ids.forEach(i=>{var e=document.createElement('span');e.className='av em';e.style.cssText='width:52px;height:52px;border-radius:50%;flex:none;background:hsl('+(i.length*47%360)+',70%,86%)';var im=document.createElement('img');im.className=i[0]=='f'?'fc':'pp';im.src='img/av/'+i+'.webp';if(i[0]=='f'){var sh=document.createElement('i');sh.className='sh';sh.style.background='#4f6bed';e.appendChild(sh)}e.appendChild(im);d.appendChild(e)});document.body.appendChild(d)},ids);await new Promise(r=>setTimeout(r,800));await pg.screenshot({path:'/tmp/av4.png'});
+console.log(await pg.evaluate(()=>[localStorage.pav,localStorage.pgen]));await b.close()})()
