@@ -47,3 +47,42 @@ Room endpoints (room code in the path, JSON body with `t`): join `j` (host creat
 
 ## 4. Settings boundaries
 Out of range values are clamped, not rejected. Non-integers are floored. After the room exists the host values are ignored.
+
+## 5. Room protocol, exact shapes
+Base: `POST /r/<code>` with a JSON body, `Content-Type` any. `<code>` = 5 digits: digit 1 = category (1..9), digit 2 = player count n (2..9), digits 3-5 any (e.g. `13123` = category 1, 3 players). Rate limit 1500 req/min per IP. Body max 4096 bytes. Every body needs `t` (string) and `c` (string cid, max 20 chars, your client id, one per player). Errors are plain text.
+Live stream: `GET /r/<code>?c=<cid>` is server-sent events. Each line is `data: <json>`. Join messages echo as `{t:'j',v:'full'|'fam',c,n,a}` and when the room fills each member gets `{t:'role',imp:bool,r:int|null}`. `r` is the word index for non-impostors, null for the impostor. Tests can learn the impostor from this (the `reveal` POST answers 403 `later` while a round is running).
+
+### join (create + fill)
+`{t:'j', c:'p1', n:'Ali', a:'', v:'full'}` -> 200 `ok`. The first join of a code by `{host:true, rounds:3, dur:180}` creates the room (host = leader). Without host and with no room -> 404 `no room`. `n` name max 14 chars, `a` avatar string (''), `v` 'fam' or 'full'. A repeat join or full roster -> 200 `ok` (ignored). `{t:'l', c}` leaves while in the lobby. When the roster reaches n, the round object is created (players fixed = roster).
+
+### ready / start
+All players POST `{t:'ready', c}` -> state JSON. When all are ready the server sets `ca` (countdown ms, 3000). After that time each player POSTs `{t:'seen', c}`. When all have seen, the round clock starts (`el` in state is ms since start). Votes are accepted only after that.
+
+### vote / end
+`{t:'vote', c, v:<target cid>}` -> state JSON. Target must be another player in the round, otherwise ignored (still 200). The last non-impostor vote ends the round automatically. The leader may end early: `{t:'close', c:<leader cid>}`. Both produce `res`.
+
+### state
+`{t:'state', c, s:<last fx index seen or 0>}` -> 200 JSON:
+`{k,n,el,nx,rd,rm,ca,sn,vt,mine,round,rounds,dur,lead,res,fx,fxs}`
+- `n` players, `rd` ready count, `vt` votes cast, `mine` my vote cid or null, `round`/`rounds`, `dur` seconds, `lead` leader cid, `nx` code of the next-round room (or null), `fxs` total fx events, `fx` events newer than `s`.
+- `res` is null until the round ends, then `{win,bonus,imp,r,votes,d,tot,disc,round,rounds,at}`: `d` = round points per cid, `tot` = room totals per cid, `win` = winner cids (last round only, else []), `bonus`, `imp` impostor cid, `votes` map voter->target, `disc` discovered flag.
+- Not in the round -> 403 `no`.
+
+### next round
+Leader POSTs `{t:'again', c:<leader>, cat:<1..9>}` after `res` exists (any player after 120 s). It creates a new room code `nx` with the same roster, rounds, dur, and totals carried over. Everyone then joins `nx` (`state` on the new code). After the last round it returns 400 `finished` unless `ng:true` (starts a fresh game, totals reset).
+
+### fx
+`{t:'fx', c, k:'s1', s:0}` -> 200 state JSON (with `fx:[{i,f,k,t}]`). 400 `bad fx` (id not s*/a* or unknown or round not started), 403 `no`, 429 `wait`.
+
+### claim (account points)
+`POST /acc {t:'add', u:'<username>', tok:'<from signup/login>', rid:'<any string, optional>', code:'<room code where that round was played>', round:<number>, c:'<cid>'}` -> 200 `{pts}`.
+- `code` = the code of the room object in which the round ended. After `again`, the next round lives under the new code `nx`, so use that code for that round.
+- `rid` is stored on the account (last 60). Repeating a stored rid -> 200 `{pts, dup:true}` with no change. Different rid for the same (round, cid) -> 409 `already claimed`.
+- Round result for the claim comes from the server, not the request.
+
+### Independence (confirmed)
+Claim key is (room, round, cid). Different accounts, or different cids, or different rounds do not affect each other. One account can claim for several cids/rounds. Concurrent identical requests: one 200, one 409/dup.
+
+### Safe items for purchase tests (from catalog.json, current prices)
+Sticker `s1` = 10, sound `a1` = 5, frame `k1` = 10. Signup with `init:40` gives a 40 coin balance (init is capped 0..40).
+Expected: buy s1 -> pts 30; buy a1 -> 25; buy k1 -> 15; repeat any -> 200 `dup:true`, no charge; unknown id -> 400; balance below price -> 402. Read prices from catalog.json in tests rather than hardcoding them.
