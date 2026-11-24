@@ -1,0 +1,10 @@
+{
+  "_doc": "Safe store items for buy tests, supplied with docs/TEST-CONTRACT.md section 5. Prices are copied here because the catalog file is not read by tests. Keep in step with the catalog owner. Prefixes: sticker s*, sound a*, frame k*.",
+  "startBalance": 40,
+  "items": [
+    { "id": "s1", "price": 10, "expectPts": 30 },
+    { "id": "a1", "price": 5, "expectPts": 25 },
+    { "id": "k1", "price": 10, "expectPts": 15 }
+  ],
+  "unknownId": "zz-not-an-item"
+}
