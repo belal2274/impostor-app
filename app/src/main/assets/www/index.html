@@ -104,6 +104,14 @@ body.inroom #homeb{display:flex}body.inroom .top{padding-left:52px}
 .shbar .panel{background:none;border:0;box-shadow:none;margin:0;padding:0}.shbar .tm{font-size:34px;margin:2px 0}.shbar .askrow{max-height:17vh;overflow:auto;-webkit-overflow-scrolling:touch}.shbar{overflow-y:auto}.shbar .sub{display:none}.shbar .sec{font-size:14px;margin:0}.shbar button{min-height:46px}
 .shpad{height:260px}}
 @media(max-width:559px){#homeb{position:absolute}}
+
+.offrow{display:flex;align-items:center;gap:8px}.offrow input{flex:1;min-width:0;font-size:18px;padding:0 10px;min-height:46px;text-align:right}
+.offav{background:none;border:0;padding:0;flex:none;display:flex;align-items:center;justify-content:center;min-width:46px;min-height:46px}
+.offavg{display:grid;grid-template-columns:repeat(4,1fr);gap:8px;max-height:46vh;overflow-y:auto;-webkit-overflow-scrolling:touch}
+.offcats{display:grid;grid-template-columns:repeat(2,1fr);gap:8px}
+.offpass{align-items:stretch;text-align:center}.offpass h1,.offpass h2{margin:4px 0;text-align:center}
+.offtag{text-align:center;color:var(--mut);font-size:14px;margin:4px 0}
+.offapp{padding-bottom:calc(24px + env(safe-area-inset-bottom))}
 </style></head><body><main id="app"></main><div id="ov"></div><button id="homeb" aria-label="القايمة الرئيسية">🏠</button>
 <script src="catalog.js?v=3.0.34"></script>
 <script>
@@ -584,12 +592,13 @@ function friendsScreen(){app.innerHTML='';
       pp.appendChild(y);pp.appendChild(n);m.appendChild(pp);ov.innerHTML='';ov.appendChild(m)};row.appendChild(rm);lp.appendChild(row)});
   app.appendChild(lp)}
 function draw0(){
-  app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
+  app.classList.remove('offapp');app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
   if(screen==='ob'||(!ls('ob')&&!parse())){screen='ob';return onboarding()}
   if(screen==='settings')return settings();
   if(screen==='profile')return profile();
   if(screen==='friends')return friendsScreen();
   if(screen==='store')return storeScreen();
+  if(screen==='off')return offScreen();
   var R=parse();
   if(!R)stopLobby();
   if(!R){
@@ -604,6 +613,7 @@ function draw0(){
     var g=el('div','grid');
     CATS.forEach(function(k,i){var b=el('button','cat');b.style.setProperty('--g',COL[i][0]);var im=el('img');im.src='img/cat'+i+'.png';b.appendChild(im);b.appendChild(document.createTextNode(k[0]));b.onclick=function(){pickCat(i)};g.appendChild(b)});
     app.appendChild(g);
+    var ofb=el('button','ghost','📱 لعب على جوال واحد (من غير نت)');ofb.style.cssText='width:100%;margin-top:10px';ofb.onclick=function(){OFF=null;screen='off';draw()};app.appendChild(ofb);
     app.appendChild(el('div','sec','ادخل روم'));
     var p=el('div','panel'),inp=el('input');inp.type='text';inp.inputMode='numeric';inp.maxLength=5;inp.placeholder='12345';
     var err=el('div','err'),b=el('button','btn','دخول');
@@ -732,6 +742,114 @@ setTimeout(function(){sp.style.opacity=0;setTimeout(function(){sp.remove()},400)
 if(pname())startInbox();
 (function(){var d0=draw;draw=function(){d0.apply(this,arguments);try{applyNameFonts()}catch(e){}}})();
 if(accName()&&ls('acc_t')){accCall({t:'get',u:accName(),tok:ls('acc_t')}).then(function(r){if(r.ok&&r.j&&profFromAcc(r.j.prof)){setTimeout(startInbox,50);if(screen==='home'||screen==='settings')draw()}}).catch(function(){})}
+/* ===== BMF offline "pass the phone" mode ===== */
+var OFF=null;
+function offSave(){try{localStorage.setItem('off.names',JSON.stringify(OFF.players.map(function(p){return p.n})))}catch(e){}}
+function offNew(){var nm=[];try{nm=JSON.parse(ls('off.names')||'[]')}catch(e){}
+ var P=[];for(var i=0;i<Math.max(3,nm.length);i++)P.push({n:nm[i]||'',a:'',fr:0});
+ OFF={ph:'setup',players:P,cat:0,rounds:3,dur:3,round:0,tot:{},pk:null};}
+function offHome(){OFF=null;screen='home';draw()}
+function offWL(){return wordList({c:OFF.cat},ED==='fam'?[{v:'fam'}]:[])}
+function offShuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
+function offPic(p){return(p.a?'e:'+p.a:'')+(p.fr?'~k'+p.fr:'')}
+function offAv(p,i,sz){return avEl(p.n,offPic(p),i,sz)}
+function offHdr(t,backFn){var top=el('div','top');top.appendChild(el('h2',0,t));if(backFn){var b=el('button','ib');b.innerHTML=ico('back');b.setAttribute('aria-label','رجوع');b.onclick=backFn;top.insertBefore(b,top.firstChild)}app.appendChild(top)}
+function offStep(lbl,val,min,max,on){var w=el('div');w.appendChild(el('div','sec',lbl));var s=el('div','stp'),m=el('button','ib','−'),p=el('button','ib','+'),b=el('b',0,String(val));
+ m.onclick=function(){if(val>min){val--;b.textContent=val;on(val)}};p.onclick=function(){if(val<max){val++;b.textContent=val;on(val)}};s.appendChild(p);s.appendChild(b);s.appendChild(m);w.appendChild(s);return w}
+function offCleanNames(){var seen={};OFF.players.forEach(function(p,i){var n=(p.n||'').replace(/\s+/g,' ').trim().slice(0,14)||('لاعب '+(i+1));var b=n,k=1;while(seen[n]){k++;n=b+' '+k}seen[n]=1;p.n=n})}
+function offSetup(){
+ app.appendChild(el('div','top')).appendChild(el('h2',0,'لعب على جوال واحد'));
+ var back=el('button','ghost','رجوع');back.onclick=offHome;
+ app.appendChild(el('p','sub','من غير نت ومن غير روم. بنسلّم الجوال بين اللاعبين. من 2 لـ 9 لاعبين.'));
+ var pn=el('div','panel');pn.appendChild(el('div','sec','اللاعبين'));
+ var used={};OFF.players.forEach(function(p){if(p.a)used[p.a]=1});
+ OFF.players.forEach(function(p,i){var row=el('div','offrow');
+  var ab=el('button','offav');ab.appendChild(offAv(p,i,46));ab.setAttribute('aria-label','اختار الصورة');ab.onclick=function(){offPick(i)};row.appendChild(ab);
+  var f=el('input');f.type='text';f.maxLength=14;f.placeholder='اسم لاعب '+(i+1);f.value=p.n;f.oninput=function(){p.n=f.value;offSave()};row.appendChild(f);
+  var rm=el('button','ghost','✕');rm.setAttribute('aria-label','شيل');rm.style.cssText='min-height:44px;width:44px;padding:0;flex:none';rm.disabled=OFF.players.length<=2;rm.onclick=function(){OFF.players.splice(i,1);draw()};row.appendChild(rm);pn.appendChild(row)});
+ if(OFF.players.length<9){var ad=el('button','ghost','+ ضيف لاعب');ad.onclick=function(){OFF.players.push({n:'',a:'',fr:0});draw()};pn.appendChild(ad)}
+ pn.appendChild(el('p','sub','الصورة والإطار اختيارهم اختياري. اللي مش هتختاره بيتحدد عشوائي.'));
+ app.appendChild(pn);
+ var cp=el('div','panel');cp.appendChild(el('div','sec','القسم'));var g=el('div','offcats');
+ CATS.forEach(function(k,i){var b=el('button',i===OFF.cat?'btn':'ghost',k[1]+' '+k[0]);b.style.cssText+=';min-height:46px;font-size:15px;padding:4px 10px';b.onclick=function(){OFF.cat=i;draw()};g.appendChild(b)});cp.appendChild(g);
+ cp.appendChild(offStep('كام جولة؟',OFF.rounds,1,10,function(v){OFF.rounds=v}));
+ cp.appendChild(offStep('مدة النقاش (بالدقايق)',OFF.dur,1,5,function(v){OFF.dur=v}));app.appendChild(cp);
+ var go=el('button','btn','ابدأ اللعب');go.onclick=function(){offCleanNames();offSave();OFF.players.forEach(function(p){if(!p.a){var u={};OFF.players.forEach(function(q){if(q.a)u[q.a]=1});var P=avPool('').filter(function(x){return!u[x]});p.a=(P.length?P:avPool(''))[Math.floor(Math.random()*(P.length||avPool('').length))]}});OFF.tot={};OFF.players.forEach(function(p){OFF.tot[p.n]=0});OFF.round=0;offRound()};app.appendChild(go);app.appendChild(back)}
+function offPick(i){var p=OFF.players[i];var m=el('div','modal');var pn=el('div','panel');pn.appendChild(el('h3',0,'اختار صورتك'));
+ var g=el('div','offavg');
+ var rnd=el('button','ghost','🎲 عشوائي');rnd.onclick=function(){p.a='';m.remove();draw()};pn.appendChild(rnd);
+ avPool('').forEach(function(id){var b=el('button','offav');b.appendChild(avEl(p.n,'e:'+id,0,44));b.onclick=function(){p.a=id;m.remove();offFrame(i)};g.appendChild(b)});pn.appendChild(g);
+ var x=el('button','ghost','إلغاء');x.onclick=function(){m.remove()};pn.appendChild(x);m.appendChild(pn);document.body.appendChild(m)}
+function offFrame(i){var p=OFF.players[i],own=[];for(var k=1;k<=FRM.n;k++)if(fxHas('k'+k))own.push(k);if(!own.length){draw();return}
+ var m=el('div','modal'),pn=el('div','panel');pn.appendChild(el('h3',0,'اختار الإطار'));var g=el('div','offavg');
+ [0].concat(own).forEach(function(k){var b=el('button','offav');b.appendChild(avEl(p.n,(p.a?'e:'+p.a:'')+(k?'~k'+k:''),0,44));b.onclick=function(){p.fr=k;m.remove();draw()};g.appendChild(b)});
+ pn.appendChild(g);var x=el('button','ghost','بدون إطار');x.onclick=function(){p.fr=0;m.remove();draw()};pn.appendChild(x);m.appendChild(pn);document.body.appendChild(m)}
+function offRound(){OFF.round++;var P=OFF.players,WL=offWL();
+ OFF.imp=Math.floor(Math.random()*P.length);OFF.word=WL[Math.floor(Math.random()*WL.length)];
+ OFF.order=offShuf(P.map(function(_,i){return i}));OFF.ri=0;OFF.reveal=false;OFF.ph='pass';OFF.after='reveal';OFF.asked={};OFF.votes={};OFF.pk=null;OFF.pi=0;OFF.res=null;OFF.opts=null;OFF.pend=OFF.order[0];draw()}
+function offPass(who,sub,cb){var p=OFF.players[who];var c=el('div','panel offpass');c.appendChild(el('p','sub',sub||'سلّم الجوال لـ'));var a=offAv(p,who,96);a.style.margin='0 auto';c.appendChild(a);var h=el('h1',0,p.n);h.style.cssText+=';overflow-wrap:anywhere;font-size:clamp(26px,9vw,40px)';c.appendChild(h);
+ var b=el('button','btn','التالي');b.onclick=cb;c.appendChild(b);app.appendChild(c)}
+function offTag(){var tg=el('div','offtag');tg.textContent='الجولة '+OFF.round+' من '+OFF.rounds;app.appendChild(tg)}
+function offReveal(){var who=OFF.order[OFF.ri],p=OFF.players[who];offTag();
+ if(OFF.ph==='pass'){return offPass(who,'سلّم الجوال لـ',function(){OFF.ph='show';OFF.reveal=false;draw()})}
+ var c=el('div','panel offpass');var a=offAv(p,who,64);a.style.margin='0 auto';c.appendChild(a);c.appendChild(el('div','sec',p.n));
+ if(!OFF.reveal){c.appendChild(el('p','sub','تأكد إنك لوحدك اللي شايف الشاشة.'));var b=el('button','btn','اظهار');b.onclick=function(){OFF.reveal=true;vib(30);draw()};c.appendChild(b)}
+ else{var isI=who===OFF.imp;if(isI){c.appendChild(el('p','sub','إنت'));var h=el('h1',0,'الإمبوستر!');h.style.color='#ff5d73';c.appendChild(h);c.appendChild(el('p','sub','مش عارف الكلمة. اسمع وإتصرف.'))}
+  else{c.appendChild(el('p','sub','الكلمة بتاعتك'));var h2=el('h1',0,OFF.word);h2.style.cssText+=';overflow-wrap:anywhere;font-size:clamp(28px,9vw,44px)';c.appendChild(h2)}
+  var d=el('button','btn','خلاص شوفت');d.onclick=function(){OFF.reveal=false;OFF.ri++;if(OFF.ri>=OFF.order.length){OFF.ph='qintro'}else OFF.ph='pass';draw()};c.appendChild(d)}
+ app.appendChild(c)}
+function offQ(){offTag();var P=OFF.players;
+ if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
+ var as=OFF.asker,pa=P[as];var c2=el('div','panel offpass');var a=offAv(pa,as,64);a.style.margin='0 auto';c2.appendChild(a);c2.appendChild(el('h2',0,pa.n+' بيسأل'));
+ var left=P.map(function(_,i){return i}).filter(function(i){return i!==as&&!OFF.asked[i]});var last=Object.keys(OFF.asked).length>=P.length-1;
+ var cand=left.length?left:P.map(function(_,i){return i}).filter(function(i){return i!==as});
+ c2.appendChild(el('p','sub',OFF.tgt==null?'اختار تسأل مين:':'اسأل '+P[OFF.tgt].n+' سؤال. لما يجاوب دوس تحت.'));
+ if(OFF.tgt==null){var g=el('div','offcats');cand.forEach(function(i){var b=el('button','ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(P[i],i,34));b.appendChild(document.createTextNode(P[i].n));b.onclick=function(){OFF.tgt=i;draw()};g.appendChild(b)});c2.appendChild(g)}
+ else{var ok=el('button','btn','اتسأل واتجاوب ✓');ok.onclick=function(){OFF.asked[as]=1;if(Object.keys(OFF.asked).length>=P.length){OFF.ph='disc';OFF.dT=Date.now()}else{OFF.asker=OFF.tgt}OFF.tgt=null;draw()};c2.appendChild(ok);var ch=el('button','ghost','غيّر الشخص');ch.onclick=function(){OFF.tgt=null;draw()};c2.appendChild(ch)}
+ app.appendChild(c2);var pr=el('p','sub','اتسأل '+Object.keys(OFF.asked).length+' من '+P.length);app.appendChild(pr)}
+var OFFTM=null;
+function offDisc(){offTag();var c=el('div','panel offpass');c.appendChild(el('div','sec','وقت النقاش'));var tm=el('div','tm','');tm.style.cssText='font-size:56px;font-weight:900';c.appendChild(tm);
+ c.appendChild(el('p','sub','اتناقشوا وشكّوا في بعض. لما تخلصوا دوس تحت.'));
+ var b=el('button','btn',OFF.players.length===2?'خلصنا، المخمّن يخمّن':'خلصنا، نبدأ التصويت');b.onclick=function(){clearInterval(OFFTM);OFF.ph=OFF.players.length===2?'gpass':'vpass';OFF.vi=0;draw()};c.appendChild(b);app.appendChild(c);
+ var end=OFF.dT+OFF.dur*60000;function up(){var r=Math.max(0,Math.round((end-Date.now())/1000));tm.textContent=Math.floor(r/60)+':'+(r%60<10?'0':'')+(r%60);if(r<=0){clearInterval(OFFTM);tm.textContent='0:00';beep(520,.3);vib(200)}}up();clearInterval(OFFTM);OFFTM=setInterval(up,500)}
+function offVote(){offTag();var P=OFF.players,v=OFF.order[OFF.vi];
+ if(OFF.ph==='vpass')return offPass(v,'سلّم الجوال لـ',function(){OFF.ph='vote';OFF.tgt=null;draw()});
+ var c=el('div','panel offpass');var a=offAv(P[v],v,56);a.style.margin='0 auto';c.appendChild(a);c.appendChild(el('div','sec',P[v].n));c.appendChild(el('p','sub','صوّت: مين فيهم الإمبوستر؟'));
+ var g=el('div','offcats');var btns=[];P.forEach(function(p,i){if(i===v)return;var b=el('button',OFF.tgt===i?'btn':'ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(p,i,34));b.appendChild(document.createTextNode(p.n));b.onclick=function(){OFF.tgt=i;draw()};g.appendChild(b)});c.appendChild(g);
+ var ok=el('button','btn','تأكيد التصويت');ok.disabled=OFF.tgt==null;ok.onclick=function(){OFF.votes[v]=OFF.tgt;OFF.tgt=null;OFF.vi++;if(OFF.vi>=OFF.order.length){OFF.ph='gpass'}else OFF.ph='vpass';draw()};c.appendChild(ok);app.appendChild(c)}
+function offGuess(){offTag();var P=OFF.players,im=OFF.imp;
+ if(OFF.ph==='gpass')return offPass(im,'سلّم الجوال لـ (آخر فرصة، هتخمّن الكلمة)',function(){OFF.ph='guess';OFF.pk=null;draw()});
+ if(!OFF.opts){var pool=offWL().filter(function(w){return w!==OFF.word});OFF.opts=offShuf(offShuf(pool).slice(0,9).concat([OFF.word]))}
+ var c=el('div','panel offpass');c.appendChild(el('div','sec','🕵️ '+P[im].n+'، خمّن الكلمة'));
+ var two=P.length===2;c.appendChild(el('p','sub','اختار الكلمة اللي تفتكرها. اختيار واحد بس. '+(two?'صح +5، غلط -2.':'صح +3، غلط -2.')));
+ var g=el('div','offcats');var bt=[];OFF.opts.forEach(function(w,ix){var b=el('button',OFF.pk===ix?'btn':'ghost',w);b.style.cssText+=';min-height:52px;padding:6px 8px;font-size:15px;line-height:1.25;overflow-wrap:anywhere';b.onclick=function(){OFF.pk=ix;draw()};g.appendChild(b)});c.appendChild(g);
+ var ok=el('button','btn','أكّد اختياري');ok.disabled=OFF.pk==null;ok.onclick=function(){offResolve()};c.appendChild(ok);app.appendChild(c)}
+function offResolve(){var P=OFF.players,n=P.length,im=OFF.imp,two=n===2,d={},ok=OFF.opts[OFF.pk]===OFF.word,tally={};P.forEach(function(p,i){d[i]=0;tally[i]=0});
+ var disc=false;
+ if(two){d[im]=ok?5:-2;disc=!ok}else{var picks=0;Object.keys(OFF.votes).forEach(function(k){tally[OFF.votes[k]]++});var top=Math.max.apply(null,P.map(function(_,i){return tally[i]}));disc=tally[im]>0&&tally[im]===top&&P.filter(function(_,i){return tally[i]===top}).length===1;
+  P.forEach(function(p,i){if(i===im)return;var t=OFF.votes[i];if(t==null)d[i]=-2;else if(t===im){d[i]=2;picks++}else d[i]=-1});
+  var others=n-1,non=others-picks;d[im]=n>=5?non-picks:(picks===others?0:5)-picks;d[im]+=ok?3:-2}
+ var t={};P.forEach(function(p,i){OFF.tot[p.n]=(OFF.tot[p.n]||0)+d[i];t[i]=OFF.tot[p.n]});
+ var last=OFF.round>=OFF.rounds,win=[],bonus=0;if(last){var mx=Math.max.apply(null,P.map(function(_,i){return t[i]}));win=P.map(function(_,i){return i}).filter(function(i){return t[i]===mx});bonus=Math.floor(10/win.length)}
+ OFF.res={d:d,t:t,ok:ok,disc:disc,win:win,bonus:bonus,pick:OFF.opts[OFF.pk]};OFF.ph='res';draw()}
+function offRes(){var P=OFF.players,R=OFF.res,im=OFF.imp,two=P.length===2;offTag();
+ var c=el('div','panel offpass');c.appendChild(el('div','sec','نتيجة الجولة '+OFF.round));var a=offAv(P[im],im,64);a.style.margin='0 auto';c.appendChild(a);c.appendChild(el('h2',0,'الإمبوستر: '+P[im].n));
+ c.appendChild(el('p','sub',(two?'':(R.disc?'الإمبوستر اتكشف! ':'الإمبوستر ما اتكشفش! '))+(R.ok?'خمّن الكلمة صح!':'اختار «'+R.pick+'» وغلط.')+' الكلمة كانت: '+OFF.word));app.appendChild(c);
+ var pn=el('div','panel');pn.appendChild(el('div','sec','النقط'));P.forEach(function(p,i){var row=el('div','sw');row.style.cssText='display:flex;align-items:center;justify-content:space-between;gap:8px';var l=el('span',0,p.n+(i===im?' 🕵️':'')+(!two&&OFF.votes[i]!=null?' ← '+P[OFF.votes[i]].n:''));l.style.cssText='overflow-wrap:anywhere;flex:1';row.appendChild(l);var d=R.d[i];var b=el('b',0,(d>0?'+':'')+d);b.style.color=d>0?'#5fd38d':d<0?'#ff7a7a':'inherit';row.appendChild(b);var tt=el('small',0,'المجموع '+R.t[i]);tt.style.cssText='color:var(--mut);white-space:nowrap';row.appendChild(tt);pn.appendChild(row)});app.appendChild(pn);
+ if(OFF.round<OFF.rounds){var nx=el('button','btn','الجولة الجاية');nx.onclick=offRound;app.appendChild(nx)}
+ else{var wn=R.win.map(function(i){return P[i].n});var fp=el('div','panel');fp.appendChild(el('div','sec','الأخيرة! الفايز: '+wn.join(' و ')));fp.appendChild(el('p','sub','البونص '+R.bonus+' نقط لكل فايز'+(R.win.length>1?' (10 اتقسمت بالتساوي)':'')+'.'));app.appendChild(fp);
+  var rk=el('div','panel');rk.appendChild(el('div','sec','الترتيب النهائي'));var ord=P.map(function(_,i){return i}).sort(function(x,y){return R.t[y]-R.t[x]}),rn=0,pv=null,md=['🥇','🥈','🥉'];ord.forEach(function(i,ix){if(R.t[i]!==pv){rn=ix+1;pv=R.t[i]}var row=el('div','sw');row.style.cssText='display:flex;align-items:center;gap:8px';row.appendChild(el('span',0,rn<=3?md[rn-1]:rn+'.'));row.appendChild(offAv(P[i],i,36));var l=el('span',0,P[i].n);l.style.cssText='flex:1;overflow-wrap:anywhere';row.appendChild(l);var s=el('b',0,(R.t[i]+(R.win.indexOf(i)>=0?R.bonus:0))+' نقطة');row.appendChild(s);rk.appendChild(row)});app.appendChild(rk);
+  var ag=el('button','btn','لعبة جديدة بنفس اللاعبين');ag.onclick=function(){OFF.ph='setup';draw()};app.appendChild(ag)}
+ var hm=el('button','ghost','القايمة الرئيسية');hm.onclick=offHome;app.appendChild(hm)}
+function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;
+ if(ph==='setup')return offSetup();
+ if(ph==='pass'||ph==='show')return offReveal();
+ if(ph==='qintro'||ph==='ask')return offQ();
+ if(ph==='disc')return offDisc();
+ if(ph==='vpass'||ph==='vote')return offVote();
+ if(ph==='gpass'||ph==='guess')return offGuess();
+ if(ph==='res')return offRes()}
+
 draw();
 })();
 </script></body></html>
