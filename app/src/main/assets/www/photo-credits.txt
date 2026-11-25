@@ -160,3 +160,4 @@ Word photos: source Wikimedia Commons (free licenses). word | author | license |
 5:لفت | thebittenword.com | CC BY 2.0 | https://commons.wikimedia.org/wiki/File:Turnip_2622027.jpg
 5:دراجون فروت | SMasters | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:Pitaya_cross_section_ed2.jpg
 5:عيش الغراب | chris_73 | CC BY-SA 3.0 | https://commons.wikimedia.org/wiki/File:ChampignonMushroom.jpg
+0:الكلوت | Flame, not lame | CC0 1.0 | https://commons.wikimedia.org/wiki/File:Women%27s_Medium_Briefs_With_Bows.jpg
