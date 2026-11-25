@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.33';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.34';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor Family</title>
 <style>
@@ -92,8 +92,14 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .tm.end{color:var(--red)}
 .trk{height:8px;border-radius:8px;background:#2a2f48;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width 1s linear}
 .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg) url(img/splash.jpg) center/cover;z-index:20;transition:opacity .4s}
-</style></head><body><main id="app"></main><div id="ov"></div>
-<script src="catalog.js?v=3.0.33"></script>
+
+#homeb{position:fixed;top:10px;left:10px;z-index:20;width:42px;height:42px;border-radius:14px;background:#1b1d33;color:#fff;border:1px solid #33365a;font-size:20px;padding:0;min-height:0;display:none;align-items:center;justify-content:center;cursor:pointer}
+body.inroom #homeb{display:flex}body.inroom .top{padding-left:52px}
+@media(max-width:600px){.shbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#15172b;border-top:1px solid #34376a;border-radius:26px 26px 0 0;padding:12px 16px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px #0008;display:flex;flex-direction:column;gap:8px;max-height:56vh}
+.shbar .panel{background:none;border:0;box-shadow:none;margin:0;padding:0}.shbar .tm{font-size:34px;margin:2px 0}.shbar .askrow{max-height:17vh;overflow:auto;-webkit-overflow-scrolling:touch}.shbar{overflow-y:auto}.shbar .sub{display:none}.shbar .sec{font-size:14px;margin:0}.shbar button{min-height:46px}
+.shpad{height:260px}}
+</style></head><body><main id="app"></main><div id="ov"></div><button id="homeb" aria-label="القايمة الرئيسية">🏠</button>
+<script src="catalog.js?v=3.0.34"></script>
 <script>
 (function(){
 var DEF=['بلال','فادي','محمد'];
@@ -239,7 +245,7 @@ function startLobby(R){if(LB.code===R.code)return;stopLobby();LB.code=R.code;
         send(R.code,me).then(function(r){if(r.status===404){LB.gone=true;evalLobby(R)}}).catch(function(){LB.err=true;evalLobby(R)})},1000);evalLobby(R)});
     es.addEventListener('message',function(ev){if(LB.code!==R.code)return;try{var dd=JSON.parse(ev.data);if(dd.t==='role')LB.role=dd;else applyMsg(LB.roster,dd)}catch(e){}evalLobby(R)});
     es.onerror=function(){if(LB.code!==R.code)return;if(es.readyState===2){LB.gone=true;LB.err=false}else LB.err=true;evalLobby(R)}}
-  if(ls('host.'+R.code)){var hm=Object.assign({host:true,vm:ls('vm')==='game'?'game':'ext',dur:Math.min(60,Math.max(1,+(ls('dur')||3)))*60,rounds:Math.min(20,Math.max(1,+(ls('rnd')||3)))},me);
+  if(ls('host.'+R.code)){var hm=Object.assign({solo:ls('solo.'+R.code)||undefined,host:true,vm:ls('vm')==='game'?'game':'ext',dur:Math.min(60,Math.max(1,+(ls('dur')||3)))*60,rounds:Math.min(20,Math.max(1,+(ls('rnd')||3)))},me);
     (function mk(){if(LB.code!==R.code)return;send(R.code,hm).then(function(r){if(r.ok)connect();else if(r.status===429){LB.err=true;evalLobby(R);setTimeout(mk,4000)}else{LB.gone=true;evalLobby(R)}}).catch(function(){LB.err=true;evalLobby(R);setTimeout(mk,3000)})})()}
   else connect()}
 function leaveRoom(R){if(!cachedRoster(R)){send(R.code,{t:'l',c:CID}).catch(function(){})}stopLobby();go('')}
@@ -277,10 +283,10 @@ function profile(next){
   var sv=el('button','btn','حفظ');sv.onclick=function(){nm=f.value.trim();if(!nm){err.textContent='اكتب اسمك الأول';return}ls('pname',nm);ls('pgen',gn||null);ls('pav',avId);ls('pfr',frN?'k'+frN:null);setTimeout(startInbox,50);setTimeout(profPush,120);if(ph){ls('pphoto',ph);ls('pthumb',th)}else{ls('pphoto',null);ls('pthumb',null)}vib();screen='home';draw()};app.appendChild(sv);
   if(ph){var rm=el('button','ghost','شيل الصورة');rm.onclick=function(){ph='';th='';paint()};app.appendChild(rm)}}
 function countPick(c){
-  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),n=Math.min(9,Math.max(2,+(ls('cnt')||3)));
+  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),MINP=accName()==='belal'?1:2,n=Math.min(9,Math.max(MINP,+(ls('cnt')||3)));
   var rn=Math.min(20,Math.max(1,+(ls('rnd')||3)));p.appendChild(el('h3',0,'كام لاعب؟'));p.appendChild(el('p','sub','العدد بيشملك إنت. اللعبة بتبدأ لما الروم يكتمل.'));
   var st=el('div','stp'),pl=el('button',0,'+'),mi=el('button',0,'−'),v=el('b',0,String(n));
-  pl.setAttribute('aria-label','زيادة');mi.setAttribute('aria-label','تقليل');pl.onclick=function(){if(n<9){n++;v.textContent=n;vib(15)}};mi.onclick=function(){if(n>2){n--;v.textContent=n;vib(15)}};
+  pl.setAttribute('aria-label','زيادة');mi.setAttribute('aria-label','تقليل');pl.onclick=function(){if(n<9){n++;v.textContent=n;vib(15)}};mi.onclick=function(){if(n>MINP){n--;v.textContent=n;vib(15)}};
   st.appendChild(pl);st.appendChild(v);st.appendChild(mi);p.appendChild(st);
   p.appendChild(el('h3',0,'كام جولة؟'));p.appendChild(el('p','sub','الليدر (اللي عمل الروم) بيختار القسم في كل جولة. النقط بتتحسب في آخر كل جولة.'));
   var st2=el('div','stp'),pl2=el('button',0,'+'),mi2=el('button',0,'−'),v2=el('b',0,String(rn));pl2.setAttribute('aria-label','زيادة الجولات');mi2.setAttribute('aria-label','تقليل الجولات');
@@ -293,7 +299,7 @@ function countPick(c){
   pl3.onclick=function(){if(dn<60){dn++;v3.textContent=dn;vib(15)}};mi3.onclick=function(){if(dn>1){dn--;v3.textContent=dn;vib(15)}};st3.appendChild(pl3);st3.appendChild(v3);st3.appendChild(mi3);p.appendChild(st3);
   var qk=el('div');qk.style.cssText='display:flex;gap:8px;justify-content:center;margin:6px 0';[3,5,10,30].forEach(function(q){var b=el('button','chip',q+' د');b.onclick=function(){dn=q;v3.textContent=dn;vib(15)};qk.appendChild(b)});p.appendChild(qk);p=pp;
   var y=el('button','btn','اعمل الروم'),x=el('button','ghost','إلغاء');x.onclick=closeModal;
-  y.onclick=function(){ls('cnt',n);ls('rnd',rn);ls('dur',dn);ls('vm',vmv);closeModal();var cd=rcode(c,n);ls('host.'+cd,'1');go(cd)};
+  y.onclick=function(){ls('cnt',n);ls('rnd',rn);ls('dur',dn);ls('vm',vmv);closeModal();var cd=rcode(c,n);ls('host.'+cd,'1');if(n===1){accCall({t:'solo',u:accName(),tok:ls('acc_t')}).then(function(r){if(r.ok&&r.j&&r.j.tk){ls('solo.'+cd,r.j.tk);go(cd)}else{ls('host.'+cd,'');alert('وضع التجربة لحساب belal بس')}});return}go(cd)};
   p.appendChild(y);p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 var AC=null;
 function beep(f,d){if(ls('snd')==='0')return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.type='sine';g.gain.value=.12;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
@@ -302,7 +308,7 @@ var app=document.getElementById('app'),ov=document.getElementById('ov'),shown=fa
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function html(t,c,x){var e=el(t,c);e.innerHTML=x;return e}
 function grad(i){return 'linear-gradient(135deg,'+COL[i][0]+','+COL[i][1]+')'}
-function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<2)return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
+function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<(accName()==='belal'?1:2))return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
 function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();if(!hash&&TM.code){clearTimeout(TM.pl);clearInterval(TM.iv);TM.code=null;TM.pl=null}shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
 function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:((window.CATALOG&&CATALOG.wordIcons)||{})[w]||null,t:w}} function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
 function closeModal(){ov.innerHTML=''}
@@ -356,10 +362,10 @@ function talkGate(){if(TM.vm!=='game'){return}
 function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel');if(!tk){pn.appendChild(el('div','sec','🎤 الصوت هيبدأ حالاً...'));return pn}
   function nm(c){var u=ros.filter(function(x){return x.c===c})[0];return u?u.n:'?'}
   var mineAsk=tk.ph==='ask'&&tk.a===CID,mineAns=tk.ph==='ans'&&tk.t===CID;
-  var head=tk.ph==='disc'?'🎙️ نقاش عام: الكل يتكلم':tk.ph==='ask'?(mineAsk?'🎤 دورك: اسأل سؤالك واختار تسأل مين':'🎤 '+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?'🎤 اتسألت: جاوب دلوقتي':'🎤 '+nm(tk.t)+' بيجاوب '+nm(tk.a));
+  var head=tk.ph==='gap'?'⏸️ فاصل بين الأسئلة: الأصوات متاحة دلوقتي':tk.ph==='disc'?'🎙️ نقاش عام: الكل يتكلم':tk.ph==='ask'?(mineAsk?'🎤 دورك: اسأل سؤالك واختار تسأل مين':'🎤 '+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?'🎤 اتسألت: جاوب دلوقتي':'🎤 '+nm(tk.t)+' بيجاوب '+nm(tk.a));
   var h=el('div','sec',head);pn.appendChild(h);var t=el('div','tm',fmt(Math.max(0,Math.ceil((TM.tkEnd-Date.now())/1000))));t.id='tkt';pn.appendChild(t);
   pn.appendChild(el('p','sub','الميكروفون بتاعك '+((tk.ph==='disc'||mineAsk||mineAns)?'مفتوح (إنت بتتكلم)':'مقفول')+' (الجولة '+tk.cyc+')'));
-  if(mineAsk){var row=el('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';ros.forEach(function(u){if(u.c===CID)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);
+  if(mineAsk){var row=el('div','askrow');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';ros.forEach(function(u){if(u.c===CID)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);
     if(tk.t){var dn=el('button','btn','خلصت، سيب '+nm(tk.t)+' يجاوب');dn.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn)}else pn.appendChild(el('p','sub','لازم تختار حد تسأله، أو الدور هيعدّي.'))}
   if(mineAns){var dn2=el('button','btn','خلصت إجابة');dn2.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn2)}
   if(tk.ph==='disc'){if(tk.dm)pn.appendChild(el('p','sub','خلصت ✓ ('+tk.dn+' من '+R.n+')'));else{var dn3=el('button','btn','خلصت كلام');dn3.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn3)}}
@@ -443,12 +449,14 @@ function fxShow(e,who){var id=e.k;if(!fxFile(id))return;if(id.charAt(0)==='s'){v
   else if(ls('fxsnd')!=='0'){fxStopSnd();try{var a=new Audio(fxFile(id));FXT.au=a;a.play().catch(function(){});var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var b=el('div');b.id='fxsb';b.style.cssText='pointer-events:auto;display:flex;gap:8px;align-items:center;background:#000c;color:#fff;border-radius:99px;padding:6px 8px 6px 14px;font-size:14px';b.appendChild(el('span',0,'🔊 '+(who?who+': ':'')+nm));var x=el('button',0,'⏹');x.style.cssText='font:inherit;border:0;border-radius:99px;background:#fff3;color:#fff;padding:4px 10px';x.onclick=fxStopSnd;b.appendChild(x);fxLayer(1).appendChild(b);a.onended=function(){if(FXT.au===a)fxStopSnd()}}catch(er){}}}
 function fxApply(d,R){if(typeof d.fxs!=='number')return;if(TM.fs===undefined){TM.fs=d.fxs;return}
   var ros=cachedRoster(R)||[];(d.fx||[]).forEach(function(e){if(e.i<=TM.fs)return;var u=ros.filter(function(x){return x.c===e.f})[0];fxShow(e,e.f===CID?'':(u?u.n:''))});TM.fs=Math.max(TM.fs,d.fxs)}
-function fxSend(id){var R=parse();if(!R||!fxHas(id))return;var now=Date.now();if(now-FXT.ts<3000){return}FXT.ts=now;tmPost(R,'fx',{k:id})}
+function fxCd(id){var r=CATALOG.rules||{},sn=id.charAt(0)==='a',cd=(sn?(r.sound_cd||30):(r.sticker_cd||10))*1000,last=(sn?FXT.ta:FXT.ts)||0;return Math.max(0,Math.ceil((last+cd-Date.now())/1000))}
+function fxBlock(id){if(id.charAt(0)==='a'&&TM.vm==='game'&&!(TM.tk&&TM.tk.ph==='gap'))return'gap';return fxCd(id)}
+function fxSend(id){var R=parse();if(!R||!fxHas(id)||fxBlock(id))return;if(id.charAt(0)==='a')FXT.ta=Date.now();else FXT.ts=Date.now();tmPost(R,'fx',{k:id})}
 function fxPicker(){var m=el('div','modal');m.setAttribute('role','dialog');var p=el('div','panel');p.appendChild(el('h3',0,'ابعت للشلة'));
   var st=fxOwn().filter(function(x){return x.charAt(0)==='s'}),sd=fxOwn().filter(function(x){return x.charAt(0)==='a'});
   if(!st.length&&!sd.length)p.appendChild(el('p','sub','لسه معاكش ستيكرز ولا أصوات. اشتريهم من المتجر بنقطك.'));
-  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
-  sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var b=el('button','ghost','🔊 '+nm);b.onclick=function(){vib(20);fxSend(id);closeModal()};p.appendChild(b)});
+  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);var cs=fxCd(id);if(cs){b.disabled=true;b.style.opacity='.4';b.title='⏳ '+cs}b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
+  sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var bl=fxBlock(id),b=el('button','ghost','🔊 '+nm+(bl==='gap'?' (في الفاصل بين الأسئلة بس)':bl?' ⏳ '+bl+' ث':''));if(bl)b.disabled=true;b.onclick=function(){vib(20);fxSend(id);closeModal()};p.appendChild(b)});
   var sb=el('button','ghost','🛍️ المتجر');sb.onclick=function(){closeModal();screen='store';draw()};p.appendChild(sb);var x=el('button','ghost','إغلاق');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function storeScreen(){app.innerHTML='';var t=el('div','top');t.appendChild(el('h2',0,'المتجر'));var x=el('button','ib');x.innerHTML=ico('back');x.onclick=function(){fxStopSnd();screen='home';draw()};t.appendChild(x);app.appendChild(t);
   var bal=el('div','sub','🪙 رصيدك: '+(+ls('pts')||0)+' نقطة');bal.style.cssText+=';font-size:18px;font-weight:800;color:var(--txt)';app.appendChild(bal);var msg=el('div','err');msg.textContent=FXT.m||'';FXT.m='';app.appendChild(msg);
@@ -485,8 +493,18 @@ function impModal(R,ros,WL){
     }).catch(function(){y.disabled=false;p.insertBefore(el('p','err','مقدرتش أجيب النتيجة. اتأكد من النت وجرب تاني.'),y)})};
   p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 
+function voteSheet(R,ros,me){var sel=TM.mine||null,m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.style.alignItems='flex-end';
+  var p=el('div','panel');p.style.cssText+=';position:fixed;left:0;right:0;bottom:0;margin:0;max-height:72vh;display:flex;flex-direction:column;border-radius:26px 26px 0 0;width:auto';
+  p.appendChild(el('h3',0,'🗳️ مين الإمبوستر؟'));p.appendChild(el('p','sub','تقدر تغيّر صوتك لحد ما الكل يصوّت ('+TM.vt+' من '+R.n+' صوّتوا)'));
+  var g=el('div');g.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:auto;-webkit-overflow-scrolling:touch;max-height:38vh;margin:6px 0';var bs=[];
+  ros.forEach(function(u,k){if(k===me)return;var b=el('button',sel===u.c?'btn':'ghost',(sel===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;margin:0';b.onclick=function(){sel=u.c;vib(20);bs.forEach(function(x){var on=x.c===sel;x.b.className=on?'btn':'ghost';x.b.textContent=(on?'✓ ':'')+x.n});ok.disabled=false};bs.push({b:b,c:u.c,n:u.n});g.appendChild(b)});
+  p.appendChild(g);var ok=el('button','btn','أكّد تصويتي');ok.disabled=!sel;ok.onclick=function(){if(!sel)return;vib(30);TM.mine=sel;tmPost(R,'vote',{v:sel});closeModal();draw()};p.appendChild(ok);
+  var x=el('button','ghost','رجوع');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
+function homeSync(){var inr=!!parse()&&screen!=='store';document.body.classList.toggle('inroom',inr)}
+function draw(){draw0();homeSync()}
+document.getElementById('homeb').onclick=function(){confirmHome()};
 function confirmHome(){var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
-  p.appendChild(el('h3',0,'رجوع للقايمة الرئيسية؟'));p.appendChild(el('p','sub','هتخرج من الروم الحالي.'));
+  p.appendChild(el('h3',0,'رجوع للقايمة الرئيسية؟'));p.appendChild(el('p','sub','مكانك ودورك محفوظين. تقدر ترجع بنفس رقم الروم في أي وقت. الجولة مش هتستناك لو غبت أكتر من 45 ثانية.'));
   var y=el('button','btn red','أيوه، اخرج'),n=el('button','ghost','لأ، خليني');n.onclick=closeModal;y.onclick=function(){closeModal();go('')};
   p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function againPick(R,ng){var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
@@ -558,7 +576,7 @@ function friendsScreen(){app.innerHTML='';
       var y=el('button','btn red','أيوه، شيله'),n=el('button','ghost','لأ');n.onclick=closeModal;y.onclick=function(){setfl(fl().filter(function(z){return z.id!==f.id}));closeModal();fhi().catch(function(){});draw()};
       pp.appendChild(y);pp.appendChild(n);m.appendChild(pp);ov.innerHTML='';ov.appendChild(m)};row.appendChild(rm);lp.appendChild(row)});
   app.appendChild(lp)}
-function draw(){
+function draw0(){
   app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
   if(screen==='ob'||(!ls('ob')&&!parse())){screen='ob';return onboarding()}
   if(screen==='settings')return settings();
@@ -637,10 +655,14 @@ function draw(){
   if(ph==='talk'){
     app.appendChild(el('p','sub','ده دورك السري. متوريش الشاشة لحد.'));roleCard(false);strip();
     app.appendChild(el('p','sub','اسألوا بعض من غير ما تقولوا الكلمة نفسها.'));
-    if(TM.vm==='game'){app.appendChild(talkPanel(R,ros,me))}
+    var PH=!!(window.matchMedia&&matchMedia('(max-width:600px)').matches),tkp=null;if(TM.vm==='game'){tkp=talkPanel(R,ros,me);if(!PH)app.appendChild(tkp)}
     var tpn=el('div','panel');if(TM.vm==='game'){tpn.appendChild(el('p','sub','الجولة مفتوحة لحد ساعة كحد أقصى. صوّت في أي وقت.'))}else{tpn.appendChild(html('div','sec',ico('timer')+' مؤقت النقاش ('+Math.round((TM.dur||180)/60*10)/10+' دقيقة)'));
     var d=el('div','tm'+(TM.t===0?' end':''),fmt(TM.t));d.id='tmd';tpn.appendChild(d);
     var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}app.appendChild(tpn);
+    if(PH){
+      var sbar=el('div','shbar');if(tkp)sbar.appendChild(tkp);
+      var vb=el('button',TM.mine?'ghost':'btn','🗳️ صوّت: مين الإمبوستر؟ ('+TM.vt+' من '+R.n+' صوّتوا)'+(TM.mine?' ✓':''));vb.onclick=function(){voteSheet(R,ros,me)};sbar.appendChild(vb);
+      app.appendChild(el('div','shpad'));app.appendChild(sbar);return}
     var vp=el('div','panel');vp.appendChild(el('div','sec','صوّت: مين الإمبوستر؟'));
     ros.forEach(function(u,k){if(k===me)return;var b=el('button',TM.mine===u.c?'btn':'ghost',(TM.mine===u.c?'✓ ':'')+u.n);b.onclick=function(){vib(30);TM.mine=u.c;tmPost(R,'vote',{v:u.c});draw()};vp.appendChild(b)});
     vp.appendChild(el('p','sub',(TM.mine?'صوتك اتسجل، تقدر تغيره. ':'لسه ما صوتّش. ')+'('+TM.vt+' من '+R.n+' صوّتوا). النتيجة والنقط بتظهر لما الكل يصوّت.'));
