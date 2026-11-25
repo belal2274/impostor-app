@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.22';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.23';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor</title>
 <style>
@@ -93,7 +93,7 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .trk{height:8px;border-radius:8px;background:#2a2f48;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width 1s linear}
 .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg) url(img/splash.jpg) center/cover;z-index:20;transition:opacity .4s}
 </style></head><body><main id="app"></main><div id="ov"></div>
-<script src="catalog.js?v=3.0.22"></script>
+<script src="catalog.js?v=3.0.23"></script>
 <script>
 (function(){
 var DEF=['بلال','فادي','محمد'];
@@ -420,10 +420,12 @@ function vcStop(){var R=parse();if(VC.on&&R)vpost(R,'vleave');VC.on=false;clearT
 function fxFile(id){var a=CATALOG.stickers.concat(CATALOG.sounds);for(var i=0;i<a.length;i++)if(a[i].id===id)return'fx/'+a[i].file;return''}
 function fxPriceOf(id){var a=CATALOG.stickers.concat(CATALOG.sounds,CATALOG.frames);for(var i=0;i<a.length;i++)if(a[i].id===id)return a[i].price;return 0}
 var SNDS=CATALOG.sounds.map(function(x){return[x.id,x.name]}),FXT={ts:0,au:null,ct:0};
-function fxOwn(){return(ls('items')||'').split(',').filter(Boolean)}
+function fxRaw(){return(ls('items')||'').split(',').filter(Boolean)}
+function fxAll(){return !!(CATALOG.rules&&CATALOG.rules.unlock_all)}
+function fxOwn(){var r=fxRaw();if(!fxAll())return r;CATALOG.stickers.concat(CATALOG.sounds).forEach(function(x){if(r.indexOf(x.id)<0)r.push(x.id)});CATALOG.frames.forEach(function(x,i){if(r.indexOf('k'+(i+1))<0)r.push('k'+(i+1))});return r}
 function fxHas(id){return fxOwn().indexOf(id)>=0}
 function fxPrice(id){return fxPriceOf(id)||999999}
-function fxAdd(id){var a=fxOwn();if(a.indexOf(id)<0)a.push(id);ls('items',a.join(','))}
+function fxAdd(id){var a=fxRaw();if(a.indexOf(id)<0)a.push(id);ls('items',a.join(','))}
 function fxMerge(str){String(str||'').split(',').filter(Boolean).forEach(fxAdd)}
 function fxBuy(id,done){var pr=fxPrice(id),pts=+ls('pts')||0;if(fxHas(id)){done('عندك الحاجة دي');return}
   if(pts<pr){done('نقطك مش كفاية');return}
