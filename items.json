@@ -79,6 +79,18 @@
    "id": "s16",
    "file": "s16.webp",
    "price": 10
+  },
+  {
+   "id": "s17",
+   "file": "s17.webp",
+   "price": 10,
+   "adult": true
+  },
+  {
+   "id": "s18",
+   "file": "s18.webp",
+   "price": 10,
+   "adult": true
   }
  ],
  "sounds": [
