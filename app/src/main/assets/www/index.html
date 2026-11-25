@@ -592,7 +592,7 @@ function friendsScreen(){app.innerHTML='';
       pp.appendChild(y);pp.appendChild(n);m.appendChild(pp);ov.innerHTML='';ov.appendChild(m)};row.appendChild(rm);lp.appendChild(row)});
   app.appendChild(lp)}
 function draw0(){
-  app.classList.remove('offapp');app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
+  app.classList.remove('offapp');if(screen!=='off'){var _f=document.getElementById('offfx');if(_f)_f.remove()}app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
   if(screen==='ob'||(!ls('ob')&&!parse())){screen='ob';return onboarding()}
   if(screen==='settings')return settings();
   if(screen==='profile')return profile();
@@ -748,7 +748,7 @@ function offSave(){try{localStorage.setItem('off.names',JSON.stringify(OFF.playe
 function offNew(){var nm=[];try{nm=JSON.parse(ls('off.names')||'[]')}catch(e){}
  var P=[];for(var i=0;i<Math.max(3,nm.length);i++)P.push({n:nm[i]||'',a:'',fr:0});
  OFF={ph:'setup',players:P,cat:0,rounds:3,dur:3,round:0,tot:{},pk:null};}
-function offHome(){OFF=null;screen='home';draw()}
+function offHome(){var fb=document.getElementById('offfx');if(fb)fb.remove();OFF=null;screen='home';draw()}
 function offWL(){return wordList({c:OFF.cat},ED==='fam'?[{v:'fam'}]:[])}
 function offShuf(a){a=a.slice();for(var i=a.length-1;i>0;i--){var j=Math.floor(Math.random()*(i+1)),t=a[i];a[i]=a[j];a[j]=t}return a}
 function offPic(p){return(p.a?'e:'+p.a:'')+(p.fr?'~k'+p.fr:'')}
@@ -766,24 +766,25 @@ function offSetup(){
  OFF.players.forEach(function(p,i){var row=el('div','offrow');
   var ab=el('button','offav');ab.appendChild(offAv(p,i,46));ab.setAttribute('aria-label','اختار الصورة');ab.onclick=function(){offPick(i)};row.appendChild(ab);
   var f=el('input');f.type='text';f.maxLength=14;f.placeholder='اسم لاعب '+(i+1);f.value=p.n;f.oninput=function(){p.n=f.value;offSave()};row.appendChild(f);
+  var own0=[];for(var k0=1;k0<=FRM.n;k0++)if(fxHas('k'+k0))own0.push(k0);var fb=el('button','ghost','🖼');fb.style.cssText='min-height:44px;width:44px;padding:0;flex:none';fb.setAttribute('aria-label','اختار الإطار');fb.disabled=!own0.length;fb.onclick=function(){offFrame(i)};row.appendChild(fb);
   var rm=el('button','ghost','✕');rm.setAttribute('aria-label','شيل');rm.style.cssText='min-height:44px;width:44px;padding:0;flex:none';rm.disabled=OFF.players.length<=2;rm.onclick=function(){OFF.players.splice(i,1);draw()};row.appendChild(rm);pn.appendChild(row)});
  if(OFF.players.length<9){var ad=el('button','ghost','+ ضيف لاعب');ad.onclick=function(){OFF.players.push({n:'',a:'',fr:0});draw()};pn.appendChild(ad)}
- pn.appendChild(el('p','sub','الصورة والإطار اختيارهم اختياري. اللي مش هتختاره بيتحدد عشوائي.'));
+ pn.appendChild(el('p','sub','اضغط على الصورة تختار صورة من كل الصور، وعلى 🖼 تختار إطار من اللي معاك. اللي مش هتختاره بيتحدد عشوائي.'));
  app.appendChild(pn);
  var cp=el('div','panel');cp.appendChild(el('div','sec','القسم'));var g=el('div','offcats');
  CATS.forEach(function(k,i){var b=el('button',i===OFF.cat?'btn':'ghost',k[1]+' '+k[0]);b.style.cssText+=';min-height:46px;font-size:15px;padding:4px 10px';b.onclick=function(){OFF.cat=i;draw()};g.appendChild(b)});cp.appendChild(g);
  cp.appendChild(offStep('كام جولة؟',OFF.rounds,1,10,function(v){OFF.rounds=v}));
  cp.appendChild(offStep('مدة النقاش (بالدقايق)',OFF.dur,1,5,function(v){OFF.dur=v}));app.appendChild(cp);
- var go=el('button','btn','ابدأ اللعب');go.onclick=function(){offCleanNames();offSave();OFF.players.forEach(function(p){if(!p.a){var u={};OFF.players.forEach(function(q){if(q.a)u[q.a]=1});var P=avPool('').filter(function(x){return!u[x]});p.a=(P.length?P:avPool(''))[Math.floor(Math.random()*(P.length||avPool('').length))]}});OFF.tot={};OFF.players.forEach(function(p){OFF.tot[p.n]=0});OFF.round=0;offRound()};app.appendChild(go);app.appendChild(back)}
+ var go=el('button','btn','ابدأ اللعب');go.onclick=function(){offCleanNames();offSave();OFF.players.forEach(function(p){if(!p.a){var u={};OFF.players.forEach(function(q){if(q.a)u[q.a]=1});var P=avPool('').filter(function(x){return!u[x]});p.a=(P.length?P:avPool(''))[Math.floor(Math.random()*(P.length||avPool('').length))]}});var ownF=[];for(var kk=1;kk<=FRM.n;kk++)if(fxHas('k'+kk))ownF.push(kk);OFF.players.forEach(function(p){if(!p.fc&&ownF.length)p.fr=ownF[Math.floor(Math.random()*ownF.length)]});OFF.tot={};OFF.players.forEach(function(p){OFF.tot[p.n]=0});OFF.round=0;offRound()};app.appendChild(go);app.appendChild(back)}
 function offPick(i){var p=OFF.players[i];var m=el('div','modal');var pn=el('div','panel');pn.appendChild(el('h3',0,'اختار صورتك'));
  var g=el('div','offavg');
  var rnd=el('button','ghost','🎲 عشوائي');rnd.onclick=function(){p.a='';m.remove();draw()};pn.appendChild(rnd);
- avPool('').forEach(function(id){var b=el('button','offav');b.appendChild(avEl(p.n,'e:'+id,0,44));b.onclick=function(){p.a=id;m.remove();offFrame(i)};g.appendChild(b)});pn.appendChild(g);
+ avPool('').forEach(function(id){var b=el('button','offav');b.appendChild(avEl(p.n,'e:'+id,0,44));b.onclick=function(){p.a=id;m.remove();draw()};g.appendChild(b)});pn.appendChild(g);
  var x=el('button','ghost','إلغاء');x.onclick=function(){m.remove()};pn.appendChild(x);m.appendChild(pn);document.body.appendChild(m)}
 function offFrame(i){var p=OFF.players[i],own=[];for(var k=1;k<=FRM.n;k++)if(fxHas('k'+k))own.push(k);if(!own.length){draw();return}
  var m=el('div','modal'),pn=el('div','panel');pn.appendChild(el('h3',0,'اختار الإطار'));var g=el('div','offavg');
- [0].concat(own).forEach(function(k){var b=el('button','offav');b.appendChild(avEl(p.n,(p.a?'e:'+p.a:'')+(k?'~k'+k:''),0,44));b.onclick=function(){p.fr=k;m.remove();draw()};g.appendChild(b)});
- pn.appendChild(g);var x=el('button','ghost','بدون إطار');x.onclick=function(){p.fr=0;m.remove();draw()};pn.appendChild(x);m.appendChild(pn);document.body.appendChild(m)}
+ [0].concat(own).forEach(function(k){var b=el('button','offav');b.appendChild(avEl(p.n,(p.a?'e:'+p.a:'')+(k?'~k'+k:''),0,44));b.onclick=function(){p.fr=k;p.fc=1;m.remove();draw()};g.appendChild(b)});
+ pn.appendChild(g);var x=el('button','ghost','بدون إطار');x.onclick=function(){p.fr=0;p.fc=1;m.remove();draw()};pn.appendChild(x);m.appendChild(pn);document.body.appendChild(m)}
 function offRound(){OFF.round++;var P=OFF.players,WL=offWL();
  OFF.imp=Math.floor(Math.random()*P.length);OFF.word=WL[Math.floor(Math.random()*WL.length)];
  OFF.order=offShuf(P.map(function(_,i){return i}));OFF.ri=0;OFF.reveal=false;OFF.ph='pass';OFF.after='reveal';OFF.asked={};OFF.votes={};OFF.pk=null;OFF.pi=0;OFF.res=null;OFF.opts=null;OFF.pend=OFF.order[0];draw()}
@@ -852,7 +853,7 @@ function offRes(){var P=OFF.players,R=OFF.res,im=OFF.imp,two=P.length===2;offTag
   var rk=el('div','panel');rk.appendChild(el('div','sec','الترتيب النهائي'));var ord=P.map(function(_,i){return i}).sort(function(x,y){return R.t[y]-R.t[x]}),rn=0,pv=null,md=['🥇','🥈','🥉'];ord.forEach(function(i,ix){if(R.t[i]!==pv){rn=ix+1;pv=R.t[i]}var row=el('div','sw');row.style.cssText='display:flex;align-items:center;gap:8px';row.appendChild(el('span',0,rn<=3?md[rn-1]:rn+'.'));row.appendChild(offAv(P[i],i,36));var l=el('span',0,P[i].n);l.style.cssText='flex:1;overflow-wrap:anywhere';row.appendChild(l);var s=el('b',0,(R.t[i]+(R.win.indexOf(i)>=0?R.bonus:0))+' نقطة');row.appendChild(s);rk.appendChild(row)});app.appendChild(rk);
   var ag=el('button','btn','لعبة جديدة بنفس اللاعبين');ag.onclick=function(){OFF.ph='setup';draw()};app.appendChild(ag)}
  var hm=el('button','ghost','القايمة الرئيسية');hm.onclick=offHome;app.appendChild(hm)}
-function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;
+function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;var fxb=document.getElementById('offfx');if(fxb&&!(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc'||ph==='res'))fxb.remove();if(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc'||ph==='res')offFxBtn();
  if(ph==='setup')return offSetup();
  if(ph==='pass'||ph==='show')return offReveal();
  if(ph==='qintro'||ph==='ask'||ph==='q2')return offQ();
@@ -860,6 +861,15 @@ function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('of
  if(ph==='vpass'||ph==='vote')return offVote();
  if(ph==='gpass'||ph==='guess')return offGuess();
  if(ph==='res')return offRes()}
+
+function offFxPicker(){var m=el('div','modal'),p=el('div','panel');p.appendChild(el('h3',0,'ستيكر أو صوت'));
+ var st=fxOwn().filter(function(x){return x.charAt(0)==='s'&&fxFile(x)}),sd=fxOwn().filter(function(x){return x.charAt(0)==='a'&&fxFile(x)});
+ var who=el('select');who.style.cssText='font:inherit;font-size:16px;min-height:44px;border-radius:12px;background:var(--card);color:var(--txt);border:1px solid var(--line);padding:0 10px;width:100%';OFF.players.forEach(function(q,i){var o=el('option',0,q.n);o.value=i;who.appendChild(o)});if(OFF.asker!=null)who.value=OFF.asker;else if(OFF.ph==='q2')who.value=OFF.imp;p.appendChild(who);
+ if(!st.length&&!sd.length)p.appendChild(el('p','sub','لسه معاكش ستيكرز ولا أصوات. اشتريهم من المتجر بنقطك.'));
+ if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;aspect-ratio:1/1;object-fit:contain;display:block';b.appendChild(im);b.onclick=function(){vib(20);fxShow({k:id},OFF.players[+who.value].n);m.remove()};g.appendChild(b)});p.appendChild(g)}
+ sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var b=el('button','ghost','🔊 '+nm);b.onclick=function(){vib(20);fxShow({k:id},OFF.players[+who.value].n);m.remove()};p.appendChild(b)});
+ var x=el('button','ghost','إغلاق');x.onclick=function(){m.remove()};p.appendChild(x);m.appendChild(p);document.body.appendChild(m)}
+function offFxBtn(){if(document.getElementById('offfx'))return;var b=el('button','ib','🎭');b.id='offfx';b.setAttribute('aria-label','ستيكر أو صوت');b.style.cssText='position:fixed;right:12px;bottom:calc(14px + env(safe-area-inset-bottom));z-index:5;width:52px;height:52px;border-radius:50%;background:#1b1d33;border:1px solid #33365a;font-size:24px';b.onclick=offFxPicker;document.body.appendChild(b)}
 
 draw();
 })();
