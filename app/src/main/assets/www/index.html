@@ -798,7 +798,18 @@ function offReveal(){var who=OFF.order[OFF.ri],p=OFF.players[who];offTag();
   else{c.appendChild(el('p','sub','الكلمة بتاعتك'));var h2=el('h1',0,OFF.word);h2.style.cssText+=';overflow-wrap:anywhere;font-size:clamp(28px,9vw,44px)';c.appendChild(h2)}
   var d=el('button','btn','خلاص شوفت');d.onclick=function(){OFF.reveal=false;OFF.ri++;if(OFF.ri>=OFF.order.length){OFF.ph='qintro'}else OFF.ph='pass';draw()};c.appendChild(d)}
  app.appendChild(c)}
+function offQ2(){offTag();var P=OFF.players,im=OFF.imp,kn=1-im;
+ var c=el('div','panel offpass');c.appendChild(el('div','sec','وقت الأسئلة'));var a=offAv(P[im],im,56);a.style.margin='0 auto';c.appendChild(a);
+ c.appendChild(el('h2',0,P[im].n+' بيسأل '+P[kn].n));
+ c.appendChild(el('p','sub','الإمبوستر يسأل اللي عارف الكلمة أي عدد أسئلة. لما يحس إنه وصل للكلمة يدوس تحت ويخمّن. أو لما الوقت يخلص.'));
+ var tm=el('div','tm','');tm.style.cssText='font-size:44px;font-weight:900';c.appendChild(tm);
+ var cnt=el('p','sub','اتسأل '+(OFF.qn||0)+' سؤال');c.appendChild(cnt);
+ var ok=el('button','ghost','اتسأل واتجاوب ✓');ok.onclick=function(){OFF.qn=(OFF.qn||0)+1;cnt.textContent='اتسأل '+OFF.qn+' سؤال';vib(20)};c.appendChild(ok);
+ var rd=el('button','btn','جاهز أخمّن دلوقتي');rd.onclick=function(){clearInterval(OFFTM);OFF.ph='gpass';draw()};c.appendChild(rd);app.appendChild(c);
+ var end=OFF.dT+OFF.dur*60000;function up(){var r=Math.max(0,Math.round((end-Date.now())/1000));tm.textContent=Math.floor(r/60)+':'+(r%60<10?'0':'')+(r%60);if(r<=0){clearInterval(OFFTM);beep(520,.3);vib(200);OFF.ph='gpass';draw()}}up();clearInterval(OFFTM);OFFTM=setInterval(up,500)}
 function offQ(){offTag();var P=OFF.players;
+ if(OFF.ph==='qintro'&&P.length===2){OFF.ph='q2';OFF.qn=0;OFF.dT=Date.now();return offQ2()}
+ if(OFF.ph==='q2')return offQ2();
  if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
  var as=OFF.asker,pa=P[as];var c2=el('div','panel offpass');var a=offAv(pa,as,64);a.style.margin='0 auto';c2.appendChild(a);c2.appendChild(el('h2',0,pa.n+' بيسأل'));
  var left=P.map(function(_,i){return i}).filter(function(i){return i!==as&&!OFF.asked[i]});var last=Object.keys(OFF.asked).length>=P.length-1;
@@ -844,7 +855,7 @@ function offRes(){var P=OFF.players,R=OFF.res,im=OFF.imp,two=P.length===2;offTag
 function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;
  if(ph==='setup')return offSetup();
  if(ph==='pass'||ph==='show')return offReveal();
- if(ph==='qintro'||ph==='ask')return offQ();
+ if(ph==='qintro'||ph==='ask'||ph==='q2')return offQ();
  if(ph==='disc')return offDisc();
  if(ph==='vpass'||ph==='vote')return offVote();
  if(ph==='gpass'||ph==='guess')return offGuess();
