@@ -179,6 +179,7 @@
   "idle_skip": true,
   "reveal": 10,
   "posters": true,
-  "photos": true
+  "photos": true,
+  "unlock_all": true
  }
 }
