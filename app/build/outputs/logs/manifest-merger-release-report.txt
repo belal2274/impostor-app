@@ -1,0 +1,79 @@
+-- Merging decision tree log ---
+manifest
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+	package
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+	android:versionName
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+	android:versionCode
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:1-10:12
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+	xmlns:android
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:1:11-69
+uses-permission#android.permission.INTERNET
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:2:3-64
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:2:20-62
+uses-permission#android.permission.RECORD_AUDIO
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:3:3-68
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:3:20-66
+uses-permission#android.permission.MODIFY_AUDIO_SETTINGS
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:4:3-77
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:4:20-75
+application
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:3-9:17
+	android:label
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:16-44
+	android:icon
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:45-79
+	android:allowBackup
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:80-107
+	android:theme
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:108-132
+activity#com.belal.impostor.MainActivity
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:5-8:16
+	android:screenOrientation
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:130-166
+	android:exported
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:44-67
+	android:configChanges
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:68-129
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:15-43
+intent-filter#action:name:android.intent.action.MAIN+category:name:android.intent.category.LAUNCHER
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:7-148
+action#android.intent.action.MAIN
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:22-73
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:30-71
+category#android.intent.category.LAUNCHER
+ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:73-132
+	android:name
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:83-130
+uses-sdk
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml reason: use-sdk injection requested
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+	android:targetSdkVersion
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+	android:minSdkVersion
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		ADDED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+		INJECTED from /tmp/w/impostor-app/app/src/main/AndroidManifest.xml

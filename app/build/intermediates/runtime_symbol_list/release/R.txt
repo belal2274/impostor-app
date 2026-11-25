@@ -1,0 +1,5 @@
+int color bg 0x7f010000
+int drawable ic_bg 0x7f020000
+int drawable ic_fgp 0x7f020001
+int mipmap ic_launcher 0x7f030000
+int style T 0x7f040000

@@ -1,0 +1,14 @@
+[
+    {
+        "merged": "com.belal.impostor.app-merged_res-5:/mipmap-anydpi-v26_ic_launcher.xml.flat",
+        "source": "com.belal.impostor.app-main-6:/mipmap-anydpi-v26/ic_launcher.xml"
+    },
+    {
+        "merged": "com.belal.impostor.app-merged_res-5:/drawable_ic_bg.png.flat",
+        "source": "com.belal.impostor.app-main-6:/drawable/ic_bg.png"
+    },
+    {
+        "merged": "com.belal.impostor.app-merged_res-5:/drawable_ic_fgp.png.flat",
+        "source": "com.belal.impostor.app-main-6:/drawable/ic_fgp.png"
+    }
+]

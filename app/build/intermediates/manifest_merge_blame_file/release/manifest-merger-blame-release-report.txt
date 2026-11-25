@@ -1,0 +1,57 @@
+1<?xml version="1.0" encoding="utf-8"?>
+2<manifest xmlns:android="http://schemas.android.com/apk/res/android"
+3    package="com.belal.impostor"
+4    android:versionCode="35"
+5    android:versionName="3.0" >
+6
+7    <uses-sdk
+8        android:minSdkVersion="26"
+8-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+9        android:targetSdkVersion="33" />
+9-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml
+10
+11    <uses-permission android:name="android.permission.INTERNET" />
+11-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:2:3-64
+11-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:2:20-62
+12    <uses-permission android:name="android.permission.RECORD_AUDIO" />
+12-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:3:3-68
+12-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:3:20-66
+13    <uses-permission android:name="android.permission.MODIFY_AUDIO_SETTINGS" />
+13-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:4:3-77
+13-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:4:20-75
+14
+15    <application
+15-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:3-9:17
+16        android:allowBackup="false"
+16-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:80-107
+17        android:extractNativeLibs="false"
+18        android:icon="@mipmap/ic_launcher"
+18-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:45-79
+19        android:label="BMF Impostor"
+19-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:16-44
+20        android:theme="@style/T" >
+20-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:5:108-132
+21        <activity
+21-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:5-8:16
+22            android:name="com.belal.impostor.MainActivity"
+22-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:15-43
+23            android:configChanges="orientation|screenSize|keyboardHidden"
+23-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:68-129
+24            android:exported="true"
+24-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:44-67
+25            android:screenOrientation="portrait" >
+25-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:6:130-166
+26            <intent-filter>
+26-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:7-148
+27                <action android:name="android.intent.action.MAIN" />
+27-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:22-73
+27-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:30-71
+28
+29                <category android:name="android.intent.category.LAUNCHER" />
+29-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:73-132
+29-->/tmp/w/impostor-app/app/src/main/AndroidManifest.xml:7:83-130
+30            </intent-filter>
+31        </activity>
+32    </application>
+33
+34</manifest>

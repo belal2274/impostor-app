@@ -1,0 +1,8 @@
+com.belal.impostor.app-pngs-0 /tmp/w/impostor-app/app/build/generated/res/pngs/release
+com.belal.impostor.app-resValues-1 /tmp/w/impostor-app/app/build/generated/res/resValues/release
+com.belal.impostor.app-rs-2 /tmp/w/impostor-app/app/build/generated/res/rs/release
+com.belal.impostor.app-mergeReleaseResources-3 /tmp/w/impostor-app/app/build/intermediates/incremental/release/mergeReleaseResources/merged.dir
+com.belal.impostor.app-mergeReleaseResources-4 /tmp/w/impostor-app/app/build/intermediates/incremental/release/mergeReleaseResources/stripped.dir
+com.belal.impostor.app-merged_res-5 /tmp/w/impostor-app/app/build/intermediates/merged_res/release
+com.belal.impostor.app-main-6 /tmp/w/impostor-app/app/src/main/res
+com.belal.impostor.app-release-7 /tmp/w/impostor-app/app/src/release/res

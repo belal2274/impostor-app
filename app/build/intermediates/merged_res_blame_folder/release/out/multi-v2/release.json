@@ -1,0 +1,28 @@
+{
+    "logs": [
+        {
+            "outputFile": "com.belal.impostor.app-merged_res-5:/values_values.arsc.flat",
+            "map": [
+                {
+                    "source": "/tmp/w/impostor-app/app/src/main/res/values/styles.xml",
+                    "from": {
+                        "startLines": "6,1",
+                        "startColumns": "2,2",
+                        "startOffsets": "272,14",
+                        "endLines": "6,5",
+                        "endColumns": "34,10",
+                        "endOffsets": "304,269"
+                    },
+                    "to": {
+                        "startLines": "2,3",
+                        "startColumns": "4,4",
+                        "startOffsets": "55,92",
+                        "endLines": "2,7",
+                        "endColumns": "36,10",
+                        "endOffsets": "87,347"
+                    }
+                }
+            ]
+        }
+    ]
+}

@@ -78,6 +78,9 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .hdr{display:flex;justify-content:space-between;align-items:center}
 .modal{position:fixed;inset:0;background:#000b;display:flex;overflow-y:auto;-webkit-overflow-scrolling:touch;overscroll-behavior:contain;padding:max(16px,env(safe-area-inset-top)) 16px max(16px,env(safe-area-inset-bottom));z-index:9;animation:in .2s}
 .modal .panel{width:100%;max-width:380px;text-align:center;margin:auto;max-height:calc(100vh - 32px);max-height:calc(100dvh - 32px);overflow-y:auto;-webkit-overflow-scrolling:touch;flex:none}
+.modal .panel .sub{overflow-wrap:anywhere}@media(max-height:700px){.modal .panel .sub{display:none}.modal .panel .stp{gap:14px}}
+@media(min-width:560px){#homeb{left:calc(50% - 250px);top:14px}}
+@media(max-width:360px){.shbar button{font-size:15px}}
 .acts{position:sticky;bottom:-18px;z-index:2;background:var(--card);margin:0 -18px -18px;padding:10px 18px 18px;display:flex;flex-direction:column;gap:8px;border-top:1px solid var(--line);border-radius:0 0 22px 22px}
 @media(max-height:760px){.modal .panel{gap:8px;padding:14px}.modal .panel .stp b{font-size:34px}.modal .panel .stp button{width:44px;height:44px}.modal .panel h3{font-size:19px}.modal .panel .sub{font-size:13px;margin:0}.acts{bottom:-14px;margin:0 -14px -14px;padding:8px 14px 14px}}
 .modal h3{margin:0;font-size:22px}
@@ -375,7 +378,7 @@ function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel');if(!tk){pn.append
 function tmPhase(){if(TM.res)return 'res';if(TM.st!==null)return 'talk';if(TM.endCd!==null)return Date.now()>=TM.endCd?'role':'cd';return 'ready'}
 function tick(){var np=tmPhase();if(np!==TM.ph){TM.ph=np;if(np==='talk')shown=false;if(np==='role'){vib(120);beep(880,.25)}draw();return}
   if(TM.ph==='cd'){var c=Math.max(1,Math.ceil((TM.endCd-Date.now())/1000));var e=document.getElementById('cdn');if(e)e.textContent=c;if(c!==TM.cds){TM.cds=c;beep(520,.12)}}
-  if(TM.st!==null&&!TM.res){var t=Math.max(0,(TM.dur||180)-Math.floor((Date.now()-TM.st)/1000));if(t!==TM.t){TM.t=t;if(t<=10&&t>0)beep(500,.08);if(t===0&&!TM.end){TM.end=true;beep(880,.6);vib(300)}}}
+  if(TM.st!==null&&!TM.res){var t=Math.max(0,(TM.dur||180)-Math.floor((Date.now()-TM.st)/1000));if(t!==TM.t){TM.t=t;if(t<=10&&t>0)beep(500,.08);if(t===0&&!TM.end){TM.end=true;beep(880,.6);vib(300);var Q2=parse();if(Q2&&Q2.n===2&&TM.ph==='talk')setTimeout(draw,50)}}}
   if(TM.ph==='role'&&TM.rvEnd){var rn=document.getElementById('rvn');if(rn)rn.textContent='اللعبة هتبدأ بعد '+Math.max(0,Math.ceil((TM.rvEnd-Date.now())/1000))+' ثانية'}
   if(TM.tk){var te=document.getElementById('tkt');if(te)te.textContent=fmt(Math.max(0,Math.ceil((TM.tkEnd-Date.now())/1000)))}
   var d=document.getElementById('tmd'),bar=document.getElementById('tmb');if(d){d.textContent=fmt(TM.t);d.className='tm'+(TM.t===0?' end':'')}if(bar)bar.style.width=(TM.t/(TM.dur||180)*100)+'%'}
@@ -390,8 +393,8 @@ function accFlush(){var u=accName(),tk=ls('acc_t');if(!u||!tk)return;var q=[];tr
 function applyPoints(R,res){var rid=R.code+'-'+res.round+'-'+(res.at%100000),key='pa.'+rid;if(ls(key))return;ls(key,'1');var dd=res.d[CID]||0,bb=(res.win&&res.win.indexOf(CID)>=0)?(res.bonus||0):0;var bal=(+ls('pts')||0)+dd;if(bal<0){bal=0;TM.reset=true}bal+=bb;ls('pts',bal);if(accName()){var q=[];try{q=JSON.parse(ls('pq')||'[]')}catch(e){}q.push({rid:rid,d:dd,b:bb,code:R.code,round:res.round});ls('pq',JSON.stringify(q));accFlush()}}
 function tmApply(d){if(!d||typeof d.k!=='number')return;var R=parse();if(R)fxApply(d,R);
   if(d.nx&&d.nx!==TM.code){var nc=d.nx;clearTimeout(TM.pl);TM.pl=null;clearInterval(TM.iv);vib(120);beep(660,.2);go(nc);return}
-  var sig=[d.k,d.rd,d.vt,d.mine,d.rm,d.round,d.rounds,d.lead,d.tk?d.tk.ph+d.tk.a+d.tk.t:'',d.vm].join();var ch=sig!==TM.sig;TM.sig=sig;
-  TM.k=d.k;TM.n=d.n;if(d.dur)TM.dur=d.dur;if(d.vm)TM.vm=d.vm;TM.tk=d.tk||null;if(d.rv!==null&&d.rv!==undefined)TM.rvEnd=Date.now()+d.rv;if(d.tk)TM.tkEnd=Date.now()+d.tk.u;talkGate();TM.rd=d.rd;TM.rm=!!d.rm;TM.vt=d.vt;TM.mine=d.mine;TM.round=d.round;TM.rounds=d.rounds;TM.lead=d.lead;
+  var sig=[d.k,d.rd,d.vt,d.mine,d.rm,d.round,d.rounds,d.lead,d.tk?d.tk.ph+d.tk.a+d.tk.t:'',d.vm,(d.g2&&d.g2.opts?'o':'')+(d.g2&&d.g2.gw!=null?'g':'')].join();var ch=sig!==TM.sig;TM.sig=sig;
+  TM.k=d.k;TM.n=d.n;if(d.dur)TM.dur=d.dur;if(d.vm)TM.vm=d.vm;TM.tk=d.tk||null;if(d.rv!==null&&d.rv!==undefined)TM.rvEnd=Date.now()+d.rv;if(d.tk)TM.tkEnd=Date.now()+d.tk.u;talkGate();TM.rd=d.rd;TM.rm=!!d.rm;TM.vt=d.vt;TM.g2=d.g2||null;TM.mine=d.mine;TM.round=d.round;TM.rounds=d.rounds;TM.lead=d.lead;
   if(d.ca!==null&&d.ca!==undefined&&TM.endCd===null)TM.endCd=Date.now()+d.ca;
   if(d.el!==null&&d.el!==undefined&&TM.st===null)TM.st=Date.now()-d.el;
   if(d.res&&!TM.res){TM.res=d.res;if(R)applyPoints(R,d.res)}
@@ -457,7 +460,7 @@ function fxSend(id){var R=parse();if(!R||!fxHas(id)||fxBlock(id))return;if(id.ch
 function fxPicker(){var m=el('div','modal');m.setAttribute('role','dialog');var p=el('div','panel');p.appendChild(el('h3',0,'ابعت للشلة'));
   var st=fxOwn().filter(function(x){return x.charAt(0)==='s'}),sd=fxOwn().filter(function(x){return x.charAt(0)==='a'});
   if(!st.length&&!sd.length)p.appendChild(el('p','sub','لسه معاكش ستيكرز ولا أصوات. اشتريهم من المتجر بنقطك.'));
-  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);var cs=fxCd(id);if(cs){b.disabled=true;b.style.opacity='.4';b.title='⏳ '+cs}b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
+  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;aspect-ratio:1/1;object-fit:contain;display:block';b.appendChild(im);var cs=fxCd(id);if(cs){b.disabled=true;b.style.opacity='.4';b.title='⏳ '+cs}b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
   sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var bl=fxBlock(id),b=el('button','ghost','🔊 '+nm+(bl==='gap'?' (في الفاصل بين الأسئلة بس)':bl?' ⏳ '+bl+' ث':''));if(bl)b.disabled=true;b.onclick=function(){vib(20);fxSend(id);closeModal()};p.appendChild(b)});
   var sb=el('button','ghost','🛍️ المتجر');sb.onclick=function(){closeModal();screen='store';draw()};p.appendChild(sb);var x=el('button','ghost','إغلاق');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function storeScreen(){app.innerHTML='';var t=el('div','top');t.appendChild(el('h2',0,'المتجر'));var x=el('button','ib');x.innerHTML=ico('back');x.onclick=function(){fxStopSnd();screen='home';draw()};t.appendChild(x);app.appendChild(t);
@@ -467,7 +470,7 @@ function storeScreen(){app.innerHTML='';var t=el('div','top');t.appendChild(el('
     p.appendChild(el('h3',0,'تشتري ده؟'));if(id.charAt(0)==='k'){var pw=el('div');pw.style.cssText='display:flex;justify-content:center;margin:26px 0';pw.appendChild(avEl('x',myPic()+'~'+id,2,92));p.appendChild(pw);p.appendChild(el('p','sub',FRM.name(+id.slice(1))))}else if(id.charAt(0)==='s'){var im=el('img');im.src=fxFile(id);im.style.cssText='width:120px;height:120px;object-fit:contain';p.appendChild(im)}else p.appendChild(el('p','sub','🔊 '+SNDS.filter(function(z){return z[0]===id})[0][1]));
     p.appendChild(el('p','sub','السعر: '+fxPrice(id)+' نقطة'));var y=el('button','btn','اشتري'),n=el('button','ghost','إلغاء');n.onclick=closeModal;y.onclick=function(){y.disabled=true;fxBuy(id,function(e){closeModal();FXT.m=e;if(!e)vib(60);storeScreen()})};p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
   var p1=el('div','panel');p1.appendChild(el('div','sec','ستيكرز'));var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px';
-  CATALOG.stickers.forEach(function(it){(function(id){var own=fxHas(id),b=el('button');b.style.cssText='position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 6px 22px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);var tg=el('span',0,own?'✓ معاك':'🪙 '+fxPrice(id));tg.style.cssText='position:absolute;bottom:3px;left:0;right:0;font-size:12px;font-weight:800;color:'+(own?'#6fe3a0':'var(--mut)');b.appendChild(tg);b.onclick=function(){vib(15);if(!own)buy(id)};g.appendChild(b)})(it.id)});
+  CATALOG.stickers.forEach(function(it){(function(id){var own=fxHas(id),b=el('button');b.style.cssText='position:relative;background:var(--card);border:1px solid var(--line);border-radius:16px;padding:6px 6px 22px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;aspect-ratio:1/1;object-fit:contain;display:block';b.appendChild(im);var tg=el('span',0,own?'✓ معاك':'🪙 '+fxPrice(id));tg.style.cssText='position:absolute;bottom:3px;left:0;right:0;font-size:12px;font-weight:800;color:'+(own?'#6fe3a0':'var(--mut)');b.appendChild(tg);b.onclick=function(){vib(15);if(!own)buy(id)};g.appendChild(b)})(it.id)});
   p1.appendChild(g);app.appendChild(p1);
   var pf=el('div','panel');pf.appendChild(el('div','sec','إطارات الصور'));var gf=el('div');gf.style.cssText='display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:8px';
   for(var q=1;q<=FRM.n;q++)(function(n){var id='k'+n,own=fxHas(id),b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:16px;padding:14px 4px 8px;display:flex;flex-direction:column;align-items:center;gap:6px;font:inherit;color:var(--txt)';b.appendChild(avEl('x',myPic()+'~k'+n,2,58));var nm2=el('span',0,FRM.name(n));nm2.style.cssText='font-size:12px;font-weight:700';b.appendChild(nm2);var tg=el('span',0,own?'✓ معاك':'🪙 '+FRM.price(n));tg.style.cssText='font-size:12px;font-weight:800;color:'+(own?'#6fe3a0':'var(--mut)');b.appendChild(tg);b.onclick=function(){vib(15);if(!own)buy(id)};gf.appendChild(b)})(q);
@@ -503,7 +506,8 @@ function voteSheet(R,ros,me){var sel=TM.mine||null,m=el('div','modal');m.setAttr
   p.appendChild(g);var ok=el('button','btn','أكّد تصويتي');ok.disabled=!sel;ok.onclick=function(){if(!sel)return;vib(30);TM.mine=sel;tmPost(R,'vote',{v:sel});closeModal();draw()};p.appendChild(ok);
   var x=el('button','ghost','رجوع');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function homeSync(){var inr=!!parse()&&screen!=='store';document.body.classList.toggle('inroom',inr)}
-function draw(){draw0();homeSync()}
+var SHRO=null;function shFit(){var sb=document.querySelector('.shbar'),pd=document.querySelector('.shpad');if(!sb||!pd)return;var f=function(){pd.style.height=(sb.offsetHeight+24)+'px'};f();if(window.ResizeObserver){try{if(SHRO)SHRO.disconnect();SHRO=new ResizeObserver(f);SHRO.observe(sb)}catch(e){}}}
+function draw(){draw0();homeSync();shFit()}
 document.getElementById('homeb').onclick=function(){confirmHome()};
 function confirmHome(){var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
   p.appendChild(el('h3',0,'رجوع للقايمة الرئيسية؟'));p.appendChild(el('p','sub','مكانك ودورك محفوظين. تقدر ترجع بنفس رقم الروم في أي وقت. الجولة مش هتستناك لو غبت أكتر من 45 ثانية.'));
@@ -661,6 +665,32 @@ function draw0(){
     var tpn=el('div','panel');if(TM.vm==='game'){tpn.appendChild(el('p','sub','الجولة مفتوحة لحد ساعة كحد أقصى. صوّت في أي وقت.'))}else{tpn.appendChild(html('div','sec',ico('timer')+' مؤقت النقاش ('+Math.round((TM.dur||180)/60*10)/10+' دقيقة)'));
     var d=el('div','tm'+(TM.t===0?' end':''),fmt(TM.t));d.id='tmd';tpn.appendChild(d);
     var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}app.appendChild(tpn);
+    if(!isImp&&!(TM.g2&&TM.g2.opts)&&!TM.optSent){TM.optSent=true;var pool=WL.filter(function(w){return w!==X.word});for(var pi=pool.length-1;pi>0;pi--){var pj=Math.floor(Math.random()*(pi+1)),pt=pool[pi];pool[pi]=pool[pj];pool[pj]=pt}
+      var oa=pool.slice(0,9);oa.push(X.word);for(var oi=oa.length-1;oi>0;oi--){var oj=Math.floor(Math.random()*(oi+1)),ot=oa[oi];oa[oi]=oa[oj];oa[oj]=ot}
+      tmPost(R,'opts',{w:oa,k:oa.indexOf(X.word)}).then(function(r){if(!r)TM.optSent=false})}
+    var g2=TM.g2||{opts:null},gph=g2.gw!=null;
+    if(R.n===2||gph){
+      var gp=el('div','panel'),oth=ros[me===0?1:0],pw=R.n===2?'+5':'+3';
+      if(isImp){
+        gp.appendChild(el('div','sec',gph?'🕵️ آخر فرصة، خمّن الكلمة':'🕵️ خمّن الكلمة'));
+        var openNow=gph||TM.end||TM.early||(TM.vm==='game');
+        if(!openNow){
+          gp.appendChild(el('p','sub','القسم: '+CATS[R.c][0]+'. اسأل '+oth.n+' أسئلة من غير ما يقولك الكلمة نفسها. لما الوقت يخلص هتختار الكلمة من 10 اختيارات. لو صح تاخد '+pw+' نقط، ولو غلط تتخصم منك 2.'));
+          var eb=el('button','ghost','جاهز أخمّن دلوقتي');eb.onclick=function(){TM.early=true;draw()};gp.appendChild(eb)}
+        else if(!g2.opts){gp.appendChild(el('p','sub','لحظة، بجهّز الاختيارات...'))}
+        else{
+          gp.appendChild(el('p','sub',(gph?'التصويت خلص. ':'')+'اختار الكلمة اللي تفتكر إنها الصح. اختيار واحد بس. صح '+pw+'، غلط -2.'));
+          var grid=el('div');grid.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px';var chosen=-1,btns=[];
+          var ob=el('button','btn','أكّد اختياري');ob.disabled=true;
+          g2.opts.forEach(function(w,ix){var b=el('button','ghost',w);b.style.cssText+=';min-height:52px;padding:6px 8px;font-size:15px;line-height:1.25;overflow-wrap:anywhere';b.onclick=function(){chosen=ix;btns.forEach(function(x,j){x.className=j===ix?'btn':'ghost'});ob.disabled=false;vib(15)};btns.push(b);grid.appendChild(b)});
+          gp.appendChild(grid);ob.onclick=function(){if(chosen<0)return;ob.disabled=true;vib(40);tmPost(R,'pick',{i:chosen})};gp.appendChild(ob)}}
+      else{
+        if(gph){gp.appendChild(el('div','sec','🎯 آخر فرصة للإمبوستر'));gp.appendChild(el('p','sub','التصويت خلص. الإمبوستر بيختار الكلمة من 10 اختيارات. النتيجة هتظهر بعد اختياره.'))}
+        else{gp.appendChild(el('div','sec','🎯 '+oth.n+' هو الإمبوستر'));
+        gp.appendChild(el('p','sub','هو مش عارف الكلمة. وصفله الحاجة من غير ما تقولها، ولو سألك جاوبه بس من غير ما تقول الكلمة. في الآخر هيختار الكلمة من 10 اختيارات (بنجهزهم أوتوماتيك). لو صح بياخد +5، ولو غلط بتتخصم منه 2.'))}}
+      app.appendChild(gp);
+      if(PH&&tkp){var sb2=el('div','shbar');sb2.appendChild(tkp);app.appendChild(el('div','shpad'));app.appendChild(sb2)}
+      return}
     if(PH){
       var sbar=el('div','shbar');if(tkp)sbar.appendChild(tkp);
       var vb=el('button',TM.mine?'ghost':'btn','🗳️ صوّت: مين الإمبوستر؟ ('+TM.vt+' من '+R.n+' صوّتوا)'+(TM.mine?' ✓':''));vb.onclick=function(){voteSheet(R,ros,me)};sbar.appendChild(vb);
@@ -674,12 +704,12 @@ function draw0(){
   var res=TM.res,im=byC(res.imp),wp2=wordParts(WL[res.r%WL.length]);
   var rp=el('div','panel');rp.appendChild(el('div','sec','نتيجة الجولة '+res.round+' من '+res.rounds));
   var iv=avEl(im.u.n,im.u.a,im.i,84);iv.style.margin='0 auto';rp.appendChild(iv);var nm=el('div','code',im.u.n);nm.style.fontSize='34px';nm.style.letterSpacing='0';rp.appendChild(nm);
-  rp.appendChild(el('p','sub',(res.disc?'الإمبوستر اتكشف! ':'الإمبوستر ما اتكشفش! ')+'الكلمة كانت: '+wp2.t));app.appendChild(rp);
-  var sp=el('div','panel');sp.appendChild(el('div','sec','التصويت والنقط'));
+  rp.appendChild(el('p','sub',(res.g2&&res.g2.two?'':(res.disc?'الإمبوستر اتكشف! ':'الإمبوستر ما اتكشفش! '))+(res.g2?(res.g2.ok?'الإمبوستر خمّن الكلمة صح! ':(res.g2.pick?'الإمبوستر اختار «'+res.g2.pick+'» وغلط. ':'الإمبوستر ما اختارش في الوقت. ')):'')+'الكلمة كانت: '+wp2.t));app.appendChild(rp);
+  var sp=el('div','panel');sp.appendChild(el('div','sec',res.g2&&res.g2.two?'النقط':'التصويت والنقط'));
   ros.forEach(function(u,k){var row=el('div','sw');var who=res.votes[u.c]?byC(res.votes[u.c]).u.n:'ما صوّتش';var dl=res.d[u.c];
-    var l=el('span',0,u.n+(u.c===res.imp?' 🕵️':'')+' ← '+who);row.appendChild(l);var dd=el('b',0,(dl>0?'+':'')+dl);dd.style.color=dl>0?'#5fd38d':dl<0?'#ff7a7a':'inherit';dd.style.fontSize='20px';row.appendChild(dd);var tt=el('span',0,'مجموعه في الروم: '+res.tot[u.c]);tt.style.cssText='width:100%;font-size:12px;opacity:.65';row.style.flexWrap='wrap';row.appendChild(tt);sp.appendChild(row)});
+    var l=el('span',0,u.n+(u.c===res.imp?' 🕵️':'')+(res.g2&&res.g2.two?'':' ← '+who));row.appendChild(l);var dd=el('b',0,(dl>0?'+':'')+dl);dd.style.color=dl>0?'#5fd38d':dl<0?'#ff7a7a':'inherit';dd.style.fontSize='20px';row.appendChild(dd);var tt=el('span',0,'مجموعه في الروم: '+res.tot[u.c]);tt.style.cssText='width:100%;font-size:12px;opacity:.65';row.style.flexWrap='wrap';row.appendChild(tt);sp.appendChild(row)});
   app.appendChild(sp);
-  var mine=el('p','sub','نقطك الكلية: '+(+ls('pts')||0)+(TM.reset?' (وصلت -10 فرجعت صفر)':''));app.appendChild(mine);
+  var mine=el('p','sub','نقطك الكلية: '+(+ls('pts')||0)+(TM.reset?' (النقط مينفعش تنزل تحت الصفر)':''));app.appendChild(mine);
   if(res.round<res.rounds){
     if(lead){var nx=el('button','btn','الجولة الجاية: اختار القسم');nx.onclick=function(){againPick(R,false)};app.appendChild(nx)}
     else app.appendChild(el('p','sub','مستني الليدر يختار القسم للجولة الجاية...'))}
