@@ -92,7 +92,13 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .tm.end{color:var(--red)}
 .trk{height:8px;border-radius:8px;background:#2a2f48;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width 1s linear}
 .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg) url(img/splash.jpg) center/cover;z-index:20;transition:opacity .4s}
-</style></head><body><main id="app"></main><div id="ov"></div>
+
+#homeb{position:fixed;top:10px;left:10px;z-index:20;width:42px;height:42px;border-radius:14px;background:#1b1d33;color:#fff;border:1px solid #33365a;font-size:20px;padding:0;min-height:0;display:none;align-items:center;justify-content:center;cursor:pointer}
+body.inroom #homeb{display:flex}body.inroom .top{padding-left:52px}
+@media(max-width:600px){.shbar{position:fixed;left:0;right:0;bottom:0;z-index:6;background:#15172b;border-top:1px solid #34376a;border-radius:26px 26px 0 0;padding:12px 16px calc(14px + env(safe-area-inset-bottom));box-shadow:0 -10px 30px #0008;display:flex;flex-direction:column;gap:8px;max-height:56vh}
+.shbar .panel{background:none;border:0;box-shadow:none;margin:0;padding:0}.shbar .tm{font-size:34px;margin:2px 0}.shbar .askrow{max-height:17vh;overflow:auto;-webkit-overflow-scrolling:touch}.shbar{overflow-y:auto}.shbar .sub{display:none}.shbar .sec{font-size:14px;margin:0}.shbar button{min-height:46px}
+.shpad{height:260px}}
+</style></head><body><main id="app"></main><div id="ov"></div><button id="homeb" aria-label="القايمة الرئيسية">🏠</button>
 <script src="catalog.js?v=3.0.33"></script>
 <script>
 (function(){
@@ -277,7 +283,7 @@ function profile(next){
   var sv=el('button','btn','حفظ');sv.onclick=function(){nm=f.value.trim();if(!nm){err.textContent='اكتب اسمك الأول';return}ls('pname',nm);ls('pgen',gn||null);ls('pav',avId);ls('pfr',frN?'k'+frN:null);setTimeout(startInbox,50);setTimeout(profPush,120);if(ph){ls('pphoto',ph);ls('pthumb',th)}else{ls('pphoto',null);ls('pthumb',null)}vib();screen='home';draw()};app.appendChild(sv);
   if(ph){var rm=el('button','ghost','شيل الصورة');rm.onclick=function(){ph='';th='';paint()};app.appendChild(rm)}}
 function countPick(c){
-  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),var MINP=accName()==='belal'?1:2,n=Math.min(9,Math.max(MINP,+(ls('cnt')||3)));
+  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),MINP=accName()==='belal'?1:2,n=Math.min(9,Math.max(MINP,+(ls('cnt')||3)));
   var rn=Math.min(20,Math.max(1,+(ls('rnd')||3)));p.appendChild(el('h3',0,'كام لاعب؟'));p.appendChild(el('p','sub','العدد بيشملك إنت. اللعبة بتبدأ لما الروم يكتمل.'));
   var st=el('div','stp'),pl=el('button',0,'+'),mi=el('button',0,'−'),v=el('b',0,String(n));
   pl.setAttribute('aria-label','زيادة');mi.setAttribute('aria-label','تقليل');pl.onclick=function(){if(n<9){n++;v.textContent=n;vib(15)}};mi.onclick=function(){if(n>MINP){n--;v.textContent=n;vib(15)}};
@@ -359,7 +365,7 @@ function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel');if(!tk){pn.append
   var head=tk.ph==='gap'?'⏸️ فاصل بين الأسئلة: الأصوات متاحة دلوقتي':tk.ph==='disc'?'🎙️ نقاش عام: الكل يتكلم':tk.ph==='ask'?(mineAsk?'🎤 دورك: اسأل سؤالك واختار تسأل مين':'🎤 '+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?'🎤 اتسألت: جاوب دلوقتي':'🎤 '+nm(tk.t)+' بيجاوب '+nm(tk.a));
   var h=el('div','sec',head);pn.appendChild(h);var t=el('div','tm',fmt(Math.max(0,Math.ceil((TM.tkEnd-Date.now())/1000))));t.id='tkt';pn.appendChild(t);
   pn.appendChild(el('p','sub','الميكروفون بتاعك '+((tk.ph==='disc'||mineAsk||mineAns)?'مفتوح (إنت بتتكلم)':'مقفول')+' (الجولة '+tk.cyc+')'));
-  if(mineAsk){var row=el('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';ros.forEach(function(u){if(u.c===CID)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);
+  if(mineAsk){var row=el('div','askrow');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';ros.forEach(function(u){if(u.c===CID)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);
     if(tk.t){var dn=el('button','btn','خلصت، سيب '+nm(tk.t)+' يجاوب');dn.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn)}else pn.appendChild(el('p','sub','لازم تختار حد تسأله، أو الدور هيعدّي.'))}
   if(mineAns){var dn2=el('button','btn','خلصت إجابة');dn2.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn2)}
   if(tk.ph==='disc'){if(tk.dm)pn.appendChild(el('p','sub','خلصت ✓ ('+tk.dn+' من '+R.n+')'));else{var dn3=el('button','btn','خلصت كلام');dn3.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn3)}}
@@ -487,8 +493,18 @@ function impModal(R,ros,WL){
     }).catch(function(){y.disabled=false;p.insertBefore(el('p','err','مقدرتش أجيب النتيجة. اتأكد من النت وجرب تاني.'),y)})};
   p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 
+function voteSheet(R,ros,me){var sel=TM.mine||null,m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');m.style.alignItems='flex-end';
+  var p=el('div','panel');p.style.cssText+=';position:fixed;left:0;right:0;bottom:0;margin:0;max-height:72vh;display:flex;flex-direction:column;border-radius:26px 26px 0 0;width:auto';
+  p.appendChild(el('h3',0,'🗳️ مين الإمبوستر؟'));p.appendChild(el('p','sub','تقدر تغيّر صوتك لحد ما الكل يصوّت ('+TM.vt+' من '+R.n+' صوّتوا)'));
+  var g=el('div');g.style.cssText='display:grid;grid-template-columns:1fr 1fr;gap:8px;overflow:auto;-webkit-overflow-scrolling:touch;max-height:38vh;margin:6px 0';var bs=[];
+  ros.forEach(function(u,k){if(k===me)return;var b=el('button',sel===u.c?'btn':'ghost',(sel===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;margin:0';b.onclick=function(){sel=u.c;vib(20);bs.forEach(function(x){var on=x.c===sel;x.b.className=on?'btn':'ghost';x.b.textContent=(on?'✓ ':'')+x.n});ok.disabled=false};bs.push({b:b,c:u.c,n:u.n});g.appendChild(b)});
+  p.appendChild(g);var ok=el('button','btn','أكّد تصويتي');ok.disabled=!sel;ok.onclick=function(){if(!sel)return;vib(30);TM.mine=sel;tmPost(R,'vote',{v:sel});closeModal();draw()};p.appendChild(ok);
+  var x=el('button','ghost','رجوع');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
+function homeSync(){var inr=!!parse()&&screen!=='store';document.body.classList.toggle('inroom',inr)}
+function draw(){draw0();homeSync()}
+document.getElementById('homeb').onclick=function(){confirmHome()};
 function confirmHome(){var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
-  p.appendChild(el('h3',0,'رجوع للقايمة الرئيسية؟'));p.appendChild(el('p','sub','هتخرج من الروم الحالي.'));
+  p.appendChild(el('h3',0,'رجوع للقايمة الرئيسية؟'));p.appendChild(el('p','sub','مكانك ودورك محفوظين. تقدر ترجع بنفس رقم الروم في أي وقت. الجولة مش هتستناك لو غبت أكتر من 45 ثانية.'));
   var y=el('button','btn red','أيوه، اخرج'),n=el('button','ghost','لأ، خليني');n.onclick=closeModal;y.onclick=function(){closeModal();go('')};
   p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function againPick(R,ng){var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
@@ -560,7 +576,7 @@ function friendsScreen(){app.innerHTML='';
       var y=el('button','btn red','أيوه، شيله'),n=el('button','ghost','لأ');n.onclick=closeModal;y.onclick=function(){setfl(fl().filter(function(z){return z.id!==f.id}));closeModal();fhi().catch(function(){});draw()};
       pp.appendChild(y);pp.appendChild(n);m.appendChild(pp);ov.innerHTML='';ov.appendChild(m)};row.appendChild(rm);lp.appendChild(row)});
   app.appendChild(lp)}
-function draw(){
+function draw0(){
   app.innerHTML='';app.style.animation='none';void app.offsetWidth;app.style.animation='';
   if(screen==='ob'||(!ls('ob')&&!parse())){screen='ob';return onboarding()}
   if(screen==='settings')return settings();
@@ -639,10 +655,14 @@ function draw(){
   if(ph==='talk'){
     app.appendChild(el('p','sub','ده دورك السري. متوريش الشاشة لحد.'));roleCard(false);strip();
     app.appendChild(el('p','sub','اسألوا بعض من غير ما تقولوا الكلمة نفسها.'));
-    if(TM.vm==='game'){app.appendChild(talkPanel(R,ros,me))}
+    var PH=!!(window.matchMedia&&matchMedia('(max-width:600px)').matches),tkp=null;if(TM.vm==='game'){tkp=talkPanel(R,ros,me);if(!PH)app.appendChild(tkp)}
     var tpn=el('div','panel');if(TM.vm==='game'){tpn.appendChild(el('p','sub','الجولة مفتوحة لحد ساعة كحد أقصى. صوّت في أي وقت.'))}else{tpn.appendChild(html('div','sec',ico('timer')+' مؤقت النقاش ('+Math.round((TM.dur||180)/60*10)/10+' دقيقة)'));
     var d=el('div','tm'+(TM.t===0?' end':''),fmt(TM.t));d.id='tmd';tpn.appendChild(d);
     var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}app.appendChild(tpn);
+    if(PH){
+      var sbar=el('div','shbar');if(tkp)sbar.appendChild(tkp);
+      var vb=el('button',TM.mine?'ghost':'btn','🗳️ صوّت: مين الإمبوستر؟ ('+TM.vt+' من '+R.n+' صوّتوا)'+(TM.mine?' ✓':''));vb.onclick=function(){voteSheet(R,ros,me)};sbar.appendChild(vb);
+      app.appendChild(el('div','shpad'));app.appendChild(sbar);return}
     var vp=el('div','panel');vp.appendChild(el('div','sec','صوّت: مين الإمبوستر؟'));
     ros.forEach(function(u,k){if(k===me)return;var b=el('button',TM.mine===u.c?'btn':'ghost',(TM.mine===u.c?'✓ ':'')+u.n);b.onclick=function(){vib(30);TM.mine=u.c;tmPost(R,'vote',{v:u.c});draw()};vp.appendChild(b)});
     vp.appendChild(el('p','sub',(TM.mine?'صوتك اتسجل، تقدر تغيره. ':'لسه ما صوتّش. ')+'('+TM.vt+' من '+R.n+' صوّتوا). النتيجة والنقط بتظهر لما الكل يصوّت.'));
