@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.36';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.37';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor Family</title>
 <style>
@@ -62,7 +62,7 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .pulse{animation:pl 1.4s ease-in-out infinite}@keyframes pl{50%{opacity:.45}}
 .av{width:46px;height:46px;border-radius:50%;display:grid;place-items:center;font-size:20px;font-weight:900;color:#fff}
 .reveal{min-height:250px;border-radius:28px;border:2px dashed #4a5280;background:#ffffff06;color:var(--mut);font:inherit;font-size:22px;font-weight:700;width:100%;display:flex;flex-direction:column;align-items:center;justify-content:center;gap:12px}
-.reveal svg{width:70px;height:70px;opacity:.7;animation:float 2.4s infinite}
+.reveal svg{width:70px;height:70px;opacity:.7;animation:float 2.4s infinite}@media(max-height:700px){.reveal{min-height:150px;gap:6px;font-size:18px}.reveal svg{width:46px;height:46px}}
 .res{text-align:center;padding:30px 16px;border-radius:28px;background:var(--card);border:1px solid var(--line);animation:flip .5s cubic-bezier(.2,1.2,.4,1)}
 @keyframes flip{from{transform:rotateY(90deg) scale(.8);opacity:0}to{transform:none;opacity:1}}
 .res.imp{border-color:var(--red);background:linear-gradient(160deg,#4a1220,var(--card))}
@@ -670,12 +670,12 @@ function draw0(){
     shown=true;app.appendChild(el('p','sub','ده دورك السري. متوريش الشاشة لحد.'));roleCard(false);strip();
     var rvp=el('p','sub',TM.rvEnd?'اللعبة هتبدأ بعد '+Math.max(0,Math.ceil((TM.rvEnd-Date.now())/1000))+' ثانية':'المؤقت هيبدأ لما كل اللاعبين يشوفوا دورهم ('+TM.k+' من '+R.n+' شافوا).');rvp.id='rvn';app.appendChild(rvp);return}
   if(ph==='talk'){
-    app.appendChild(el('p','sub','ده دورك السري. متوريش الشاشة لحد.'));roleCard(false);strip();
+    var topP=el('p','sub','ده دورك السري. متوريش الشاشة لحد.');app.appendChild(topP);roleCard(false);strip();
     app.appendChild(el('p','sub','اسألوا بعض من غير ما تقولوا الكلمة نفسها.'));
     var PH=!!(window.matchMedia&&matchMedia('(max-width:600px)').matches),tkp=null;if(TM.vm==='game'){tkp=talkPanel(R,ros,me);if(!PH)app.appendChild(tkp)}
     var tpn=el('div','panel');if(TM.vm==='game'){tpn.appendChild(el('p','sub','الجولة مفتوحة لحد ساعة كحد أقصى. صوّت في أي وقت.'))}else{tpn.appendChild(html('div','sec',ico('timer')+' مؤقت النقاش ('+Math.round((TM.dur||180)/60*10)/10+' دقيقة)'));
     var d=el('div','tm'+(TM.t===0?' end':''),fmt(TM.t));d.id='tmd';tpn.appendChild(d);
-    var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}app.appendChild(tpn);
+    var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}if(TM.vm!=='game'&&window.matchMedia&&matchMedia('(max-width:600px) and (max-height:760px)').matches)app.insertBefore(tpn,topP.nextSibling);else app.appendChild(tpn);
     if(!isImp&&!(TM.g2&&TM.g2.opts)&&!TM.optSent){TM.optSent=true;var pool=WL.filter(function(w){return w!==X.word});for(var pi=pool.length-1;pi>0;pi--){var pj=Math.floor(Math.random()*(pi+1)),pt=pool[pi];pool[pi]=pool[pj];pool[pj]=pt}
       var oa=pool.slice(0,9);oa.push(X.word);for(var oi=oa.length-1;oi>0;oi--){var oj=Math.floor(Math.random()*(oi+1)),ot=oa[oi];oa[oi]=oa[oj];oa[oj]=ot}
       tmPost(R,'opts',{w:oa,k:oa.indexOf(X.word)}).then(function(r){if(!r)TM.optSent=false})}
@@ -799,7 +799,7 @@ function offReveal(){var who=OFF.order[OFF.ri],p=OFF.players[who];offTag();
   else{c.appendChild(el('p','sub','الكلمة بتاعتك'));var h2=el('h1',0,OFF.word);h2.style.cssText+=';overflow-wrap:anywhere;font-size:clamp(28px,9vw,44px)';c.appendChild(h2)}
   var d=el('button','btn','خلاص شوفت');d.onclick=function(){OFF.reveal=false;OFF.ri++;if(OFF.ri>=OFF.order.length){OFF.ph='qintro'}else OFF.ph='pass';draw()};c.appendChild(d)}
  app.appendChild(c)}
-function offQ2(){offTag();var P=OFF.players,im=OFF.imp,kn=1-im;
+function offQ2(){var P=OFF.players,im=OFF.imp,kn=1-im;
  var c=el('div','panel offpass');c.appendChild(el('div','sec','وقت الأسئلة'));var a=offAv(P[im],im,56);a.style.margin='0 auto';c.appendChild(a);
  c.appendChild(el('h2',0,P[im].n+' بيسأل '+P[kn].n));
  c.appendChild(el('p','sub','الإمبوستر يسأل اللي عارف الكلمة أي عدد أسئلة. لما يحس إنه وصل للكلمة يدوس تحت ويخمّن. أو لما الوقت يخلص.'));
@@ -811,15 +811,20 @@ function offQ2(){offTag();var P=OFF.players,im=OFF.imp,kn=1-im;
 function offQ(){offTag();var P=OFF.players;
  if(OFF.ph==='qintro'&&P.length===2){OFF.ph='q2';OFF.qn=0;OFF.dT=Date.now();return offQ2()}
  if(OFF.ph==='q2')return offQ2();
- if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
+ if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};OFF.nq=0;var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده، وتكملوا زي ما تحبوا. التصويت مش هيبدأ غير لما كل واحد يقول إنه جاهز. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
  var as=OFF.asker,pa=P[as];var c2=el('div','panel offpass');var a=offAv(pa,as,64);a.style.margin='0 auto';c2.appendChild(a);c2.appendChild(el('h2',0,pa.n+' بيسأل'));
  var left=P.map(function(_,i){return i}).filter(function(i){return i!==as&&!OFF.asked[i]});var last=Object.keys(OFF.asked).length>=P.length-1;
- var cand=left.length?left:P.map(function(_,i){return i}).filter(function(i){return i!==as});
+ var cand=P.map(function(_,i){return i}).filter(function(i){return i!==as});
  c2.appendChild(el('p','sub',OFF.tgt==null?'اختار تسأل مين:':'اسأل '+P[OFF.tgt].n+' سؤال. لما يجاوب دوس تحت.'));
- if(OFF.tgt==null){var g=el('div','offcats');cand.forEach(function(i){var b=el('button','ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(P[i],i,34));b.appendChild(document.createTextNode(P[i].n));b.onclick=function(){OFF.tgt=i;draw()};g.appendChild(b)});c2.appendChild(g)}
- else{var ok=el('button','btn','اتسأل واتجاوب ✓');ok.onclick=function(){OFF.asked[as]=1;if(Object.keys(OFF.asked).length>=P.length){OFF.ph='disc';OFF.dT=Date.now()}else{OFF.asker=OFF.tgt}OFF.tgt=null;draw()};c2.appendChild(ok);var ch=el('button','ghost','غيّر الشخص');ch.onclick=function(){OFF.tgt=null;draw()};c2.appendChild(ch)}
- app.appendChild(c2);var pr=el('p','sub','اتسأل '+Object.keys(OFF.asked).length+' من '+P.length);app.appendChild(pr)}
+ if(OFF.tgt==null){var g=el('div','offcats');cand.forEach(function(i){var b=el('button','ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(P[i],i,34));b.appendChild(document.createTextNode(P[i].n));b.onclick=function(){OFF.tgt=i;draw()};g.appendChild(b)});c2.appendChild(g);var rv=el('button','btn','🗳️ كلنا جاهزين نصوّت');rv.style.marginTop='14px';rv.onclick=function(){OFF.ph='rc';OFF.rci=0;draw()};c2.appendChild(rv)}
+ else{var ok=el('button','btn','اتسأل واتجاوب ✓');ok.onclick=function(){OFF.nq=(OFF.nq||0)+1;OFF.asker=OFF.tgt;OFF.tgt=null;draw()};c2.appendChild(ok);var ch=el('button','ghost','غيّر الشخص');ch.onclick=function(){OFF.tgt=null;draw()};c2.appendChild(ch)}
+ app.appendChild(c2);var pr=el('p','sub','عدد الأسئلة لحد دلوقتي: '+(OFF.nq||0)+' (الأسئلة مفتوحة لحد ما الكل يجهّز للتصويت)');pr.style.marginBottom='80px';app.appendChild(pr)}
 var OFFTM=null;
+function offReady(){offTag();var P=OFF.players,w=OFF.order[OFF.rci];
+ if(OFF.ph==='rc')return offPass(w,'سلّم الجوال لـ (جاهز للتصويت؟)',function(){OFF.ph='rcq';draw()});
+ var c=el('div','panel offpass');var a=offAv(P[w],w,56);a.style.margin='0 auto';c.appendChild(a);c.appendChild(el('div','sec',P[w].n));c.appendChild(el('p','sub','جاهز نبدأ التصويت؟ ('+(OFF.rci+1)+' من '+P.length+')'));
+ var y=el('button','btn','أيوه، جاهز للتصويت');y.onclick=function(){OFF.rci++;if(OFF.rci>=OFF.order.length){OFF.ph='vpass';OFF.vi=0}else OFF.ph='rc';draw()};c.appendChild(y);
+ var n=el('button','ghost','لسه، نكمّل أسئلة');n.style.marginTop='10px';n.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(n);app.appendChild(c)}
 function offDisc(){offTag();var c=el('div','panel offpass');c.appendChild(el('div','sec','وقت النقاش'));var tm=el('div','tm','');tm.style.cssText='font-size:56px;font-weight:900';c.appendChild(tm);
  c.appendChild(el('p','sub','اتناقشوا وشكّوا في بعض. لما تخلصوا دوس تحت.'));
  var b=el('button','btn',OFF.players.length===2?'خلصنا، المخمّن يخمّن':'خلصنا، نبدأ التصويت');b.onclick=function(){clearInterval(OFFTM);OFF.ph=OFF.players.length===2?'gpass':'vpass';OFF.vi=0;draw()};c.appendChild(b);app.appendChild(c);
@@ -853,10 +858,11 @@ function offRes(){var P=OFF.players,R=OFF.res,im=OFF.imp,two=P.length===2;offTag
   var rk=el('div','panel');rk.appendChild(el('div','sec','الترتيب النهائي'));var ord=P.map(function(_,i){return i}).sort(function(x,y){return R.t[y]-R.t[x]}),rn=0,pv=null,md=['🥇','🥈','🥉'];ord.forEach(function(i,ix){if(R.t[i]!==pv){rn=ix+1;pv=R.t[i]}var row=el('div','sw');row.style.cssText='display:flex;align-items:center;gap:8px';row.appendChild(el('span',0,rn<=3?md[rn-1]:rn+'.'));row.appendChild(offAv(P[i],i,36));var l=el('span',0,P[i].n);l.style.cssText='flex:1;overflow-wrap:anywhere';row.appendChild(l);var s=el('b',0,(R.t[i]+(R.win.indexOf(i)>=0?R.bonus:0))+' نقطة');row.appendChild(s);rk.appendChild(row)});app.appendChild(rk);
   var ag=el('button','btn','لعبة جديدة بنفس اللاعبين');ag.onclick=function(){OFF.ph='setup';draw()};app.appendChild(ag)}
  var hm=el('button','ghost','القايمة الرئيسية');hm.onclick=offHome;app.appendChild(hm)}
-function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;var fxb=document.getElementById('offfx');if(fxb&&!(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc'||ph==='res'))fxb.remove();if(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc'||ph==='res')offFxBtn();
+function offScreen(){if(!OFF)offNew();clearInterval(OFFTM);app.classList.add('offapp');var ph=OFF.ph;var fxb=document.getElementById('offfx');if(fxb&&!(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc'))fxb.remove();if(ph==='ask'||ph==='qintro'||ph==='q2'||ph==='disc')offFxBtn();
  if(ph==='setup')return offSetup();
  if(ph==='pass'||ph==='show')return offReveal();
  if(ph==='qintro'||ph==='ask'||ph==='q2')return offQ();
+ if(ph==='rc'||ph==='rcq')return offReady();
  if(ph==='disc')return offDisc();
  if(ph==='vpass'||ph==='vote')return offVote();
  if(ph==='gpass'||ph==='guess')return offGuess();
