@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.25';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.26';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor</title>
 <style>
@@ -93,7 +93,7 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .trk{height:8px;border-radius:8px;background:#2a2f48;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width 1s linear}
 .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg) url(img/splash.jpg) center/cover;z-index:20;transition:opacity .4s}
 </style></head><body><main id="app"></main><div id="ov"></div>
-<script src="catalog.js?v=3.0.25"></script>
+<script src="catalog.js?v=3.0.26"></script>
 <script>
 (function(){
 var DEF=['بلال','فادي','محمد'];
@@ -306,8 +306,7 @@ function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return nul
 function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
 function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:((window.CATALOG&&CATALOG.wordIcons)||{})[w]||null,t:w}} function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
 function closeModal(){ov.innerHTML=''}
-function adultGate(cb){cb()}
-function pickCat(i){vib();if(CATS[i][3]&&ls('adult')!=='1'){adultGate(function(){countPick(i)});return}countPick(i)}
+function pickCat(i){vib();countPick(i)}
 function toggle(key,label){var r=el('div','sw');r.appendChild(el('span',0,label));var b=el('button','tg'+(ls(key)==='0'?'':' on'));b.onclick=function(){ls(key,ls(key)==='0'?'1':'0');b.className='tg'+(ls(key)==='0'?'':' on');vib();beep(660,.1)};r.appendChild(b);return r}
 var OB=[['🕵️','اعمل روم','اختار القسم وعدد اللاعبين (معاك)، هيطلعلك رقم من 5 أرقام. قوله لصحابك.',0],['🔢','ادخلوا بنفس الرقم','كل واحد يكتب الرقم باسمه وصورته. اللعبة بتبدأ لوحدها لما العدد يكتمل.',2],['🎭','واحد بس الإمبوستر','كل واحد يشوف الكلمة سرًا، والإمبوستر ما بيشوفهاش. اكتشفوه!',1]];
 function onboarding(){
@@ -491,7 +490,7 @@ function againPick(R,ng){var m=el('div','modal');m.setAttribute('role','dialog')
   function start(i){fetch(topic(R.code),{method:'POST',body:JSON.stringify({t:'again',c:CID,cat:i+1,ng:ng?1:0})}).then(function(r){if(!r.ok)throw 0;return r.json()}).then(function(d){closeModal();tmApply(d)}).catch(function(){err.textContent='مقدرتش أبدأ الجولة. اتأكد من النت وجرب تاني.'})}
   var order=[R.c];CATS.forEach(function(_,i){if(i!==R.c)order.push(i)});
   order.forEach(function(i){var b=el('button',i===R.c?'btn':'ghost',CATS[i][0]+(i===R.c?' (نفس القسم)':''));
-    b.onclick=function(){if(CATS[i][3]&&ls('adult')!=='1'){adultGate(function(){start(i)});return}start(i)};p.appendChild(b)});
+    b.onclick=function(){start(i)};p.appendChild(b)});
   var x=el('button','ghost','إلغاء');x.onclick=closeModal;p.appendChild(err);p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 var FA='ABCDEFGHJKLMNPQRSTUVWXYZ23456789';
 function rnd(n,al){var a=new Uint32Array(n),o='';crypto.getRandomValues(a);for(var i=0;i<n;i++)o+=al.charAt(a[i]%al.length);return o}
@@ -519,7 +518,7 @@ function inviteModal(e){var c=+e.code.charAt(0)-1;if(c<0||c>=CATS.length)return;
   var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true');var p=el('div','panel');
   p.appendChild(el('h3',0,e.n+' بيدعوك للعب'));p.appendChild(el('p','sub','القسم: '+CATS[c][0]+'. عدد اللاعبين: '+e.code.charAt(1)));
   var y=el('button','btn','انضم'),n=el('button','ghost','تجاهل');n.onclick=closeModal;
-  y.onclick=function(){closeModal();if(CATS[c][3]&&ls('adult')!=='1'){adultGate(function(){go(e.code)});return}go(e.code)};
+  y.onclick=function(){closeModal();go(e.code)};
   p.appendChild(y);p.appendChild(n);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 var INVS={};
 function invitePanel(R){var fs=fok();var p=el('div','panel');p.appendChild(el('div','sec','ادعو صحابك'));
@@ -579,12 +578,12 @@ function draw(){
     var p=el('div','panel'),inp=el('input');inp.type='text';inp.inputMode='numeric';inp.maxLength=5;inp.placeholder='12345';
     var err=el('div','err'),b=el('button','btn','دخول');
     function join(){var v=inp.value.replace(/\D/g,''),c=+v.charAt(0)-1;if(v.length!==5||c<0||c>=CATS.length||+v.charAt(1)<2){err.textContent='الرقم لازم 5 أرقام صح';return}
-      if(CATS[c][3]&&ls('adult')!=='1'){adultGate(function(){go(v)});return}go(v)}
+      go(v)}
     b.onclick=join;inp.onkeydown=function(e){if(e.key==='Enter')join()};
     p.appendChild(inp);p.appendChild(err);p.appendChild(b);app.appendChild(p);
     app.appendChild(el('div','foot','BMF Impostor · الإصدار 3.0'));
     return}
-  if(CATS[R.c][3]&&ls('adult')!=='1'){adultGate(function(){draw()});return}
+  
   var tg=el('span','tag');tg.appendChild(document.createTextNode(CATS[R.c][0]));
   if(!pname()){profile('force');return}
   var ros=cachedRoster(R);
