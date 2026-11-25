@@ -239,7 +239,7 @@ function startLobby(R){if(LB.code===R.code)return;stopLobby();LB.code=R.code;
         send(R.code,me).then(function(r){if(r.status===404){LB.gone=true;evalLobby(R)}}).catch(function(){LB.err=true;evalLobby(R)})},1000);evalLobby(R)});
     es.addEventListener('message',function(ev){if(LB.code!==R.code)return;try{var dd=JSON.parse(ev.data);if(dd.t==='role')LB.role=dd;else applyMsg(LB.roster,dd)}catch(e){}evalLobby(R)});
     es.onerror=function(){if(LB.code!==R.code)return;if(es.readyState===2){LB.gone=true;LB.err=false}else LB.err=true;evalLobby(R)}}
-  if(ls('host.'+R.code)){var hm=Object.assign({host:true,vm:ls('vm')==='game'?'game':'ext',dur:Math.min(60,Math.max(1,+(ls('dur')||3)))*60,rounds:Math.min(20,Math.max(1,+(ls('rnd')||3)))},me);
+  if(ls('host.'+R.code)){var hm=Object.assign({solo:ls('solo.'+R.code)||undefined,host:true,vm:ls('vm')==='game'?'game':'ext',dur:Math.min(60,Math.max(1,+(ls('dur')||3)))*60,rounds:Math.min(20,Math.max(1,+(ls('rnd')||3)))},me);
     (function mk(){if(LB.code!==R.code)return;send(R.code,hm).then(function(r){if(r.ok)connect();else if(r.status===429){LB.err=true;evalLobby(R);setTimeout(mk,4000)}else{LB.gone=true;evalLobby(R)}}).catch(function(){LB.err=true;evalLobby(R);setTimeout(mk,3000)})})()}
   else connect()}
 function leaveRoom(R){if(!cachedRoster(R)){send(R.code,{t:'l',c:CID}).catch(function(){})}stopLobby();go('')}
@@ -277,10 +277,10 @@ function profile(next){
   var sv=el('button','btn','حفظ');sv.onclick=function(){nm=f.value.trim();if(!nm){err.textContent='اكتب اسمك الأول';return}ls('pname',nm);ls('pgen',gn||null);ls('pav',avId);ls('pfr',frN?'k'+frN:null);setTimeout(startInbox,50);setTimeout(profPush,120);if(ph){ls('pphoto',ph);ls('pthumb',th)}else{ls('pphoto',null);ls('pthumb',null)}vib();screen='home';draw()};app.appendChild(sv);
   if(ph){var rm=el('button','ghost','شيل الصورة');rm.onclick=function(){ph='';th='';paint()};app.appendChild(rm)}}
 function countPick(c){
-  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),n=Math.min(9,Math.max(2,+(ls('cnt')||3)));
+  var m=el('div','modal');m.setAttribute('role','dialog');m.setAttribute('aria-modal','true'),p=el('div','panel'),var MINP=accName()==='belal'?1:2,n=Math.min(9,Math.max(MINP,+(ls('cnt')||3)));
   var rn=Math.min(20,Math.max(1,+(ls('rnd')||3)));p.appendChild(el('h3',0,'كام لاعب؟'));p.appendChild(el('p','sub','العدد بيشملك إنت. اللعبة بتبدأ لما الروم يكتمل.'));
   var st=el('div','stp'),pl=el('button',0,'+'),mi=el('button',0,'−'),v=el('b',0,String(n));
-  pl.setAttribute('aria-label','زيادة');mi.setAttribute('aria-label','تقليل');pl.onclick=function(){if(n<9){n++;v.textContent=n;vib(15)}};mi.onclick=function(){if(n>2){n--;v.textContent=n;vib(15)}};
+  pl.setAttribute('aria-label','زيادة');mi.setAttribute('aria-label','تقليل');pl.onclick=function(){if(n<9){n++;v.textContent=n;vib(15)}};mi.onclick=function(){if(n>MINP){n--;v.textContent=n;vib(15)}};
   st.appendChild(pl);st.appendChild(v);st.appendChild(mi);p.appendChild(st);
   p.appendChild(el('h3',0,'كام جولة؟'));p.appendChild(el('p','sub','الليدر (اللي عمل الروم) بيختار القسم في كل جولة. النقط بتتحسب في آخر كل جولة.'));
   var st2=el('div','stp'),pl2=el('button',0,'+'),mi2=el('button',0,'−'),v2=el('b',0,String(rn));pl2.setAttribute('aria-label','زيادة الجولات');mi2.setAttribute('aria-label','تقليل الجولات');
@@ -293,7 +293,7 @@ function countPick(c){
   pl3.onclick=function(){if(dn<60){dn++;v3.textContent=dn;vib(15)}};mi3.onclick=function(){if(dn>1){dn--;v3.textContent=dn;vib(15)}};st3.appendChild(pl3);st3.appendChild(v3);st3.appendChild(mi3);p.appendChild(st3);
   var qk=el('div');qk.style.cssText='display:flex;gap:8px;justify-content:center;margin:6px 0';[3,5,10,30].forEach(function(q){var b=el('button','chip',q+' د');b.onclick=function(){dn=q;v3.textContent=dn;vib(15)};qk.appendChild(b)});p.appendChild(qk);p=pp;
   var y=el('button','btn','اعمل الروم'),x=el('button','ghost','إلغاء');x.onclick=closeModal;
-  y.onclick=function(){ls('cnt',n);ls('rnd',rn);ls('dur',dn);ls('vm',vmv);closeModal();var cd=rcode(c,n);ls('host.'+cd,'1');go(cd)};
+  y.onclick=function(){ls('cnt',n);ls('rnd',rn);ls('dur',dn);ls('vm',vmv);closeModal();var cd=rcode(c,n);ls('host.'+cd,'1');if(n===1){accCall({t:'solo',u:accName(),tok:ls('acc_t')}).then(function(r){if(r.ok&&r.j&&r.j.tk){ls('solo.'+cd,r.j.tk);go(cd)}else{ls('host.'+cd,'');alert('وضع التجربة لحساب belal بس')}});return}go(cd)};
   p.appendChild(y);p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 var AC=null;
 function beep(f,d){if(ls('snd')==='0')return;try{AC=AC||new (window.AudioContext||window.webkitAudioContext)();var o=AC.createOscillator(),g=AC.createGain();o.frequency.value=f;o.type='sine';g.gain.value=.12;o.connect(g);g.connect(AC.destination);o.start();g.gain.exponentialRampToValueAtTime(.001,AC.currentTime+d);o.stop(AC.currentTime+d)}catch(e){}}
@@ -302,7 +302,7 @@ var app=document.getElementById('app'),ov=document.getElementById('ov'),shown=fa
 function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null)e.textContent=x;return e}
 function html(t,c,x){var e=el(t,c);e.innerHTML=x;return e}
 function grad(i){return 'linear-gradient(135deg,'+COL[i][0]+','+COL[i][1]+')'}
-function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<2)return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
+function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<(accName()==='belal'?1:2))return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
 function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();if(!hash&&TM.code){clearTimeout(TM.pl);clearInterval(TM.iv);TM.code=null;TM.pl=null}shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
 function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:((window.CATALOG&&CATALOG.wordIcons)||{})[w]||null,t:w}} function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
 function closeModal(){ov.innerHTML=''}
@@ -356,7 +356,7 @@ function talkGate(){if(TM.vm!=='game'){return}
 function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel');if(!tk){pn.appendChild(el('div','sec','🎤 الصوت هيبدأ حالاً...'));return pn}
   function nm(c){var u=ros.filter(function(x){return x.c===c})[0];return u?u.n:'?'}
   var mineAsk=tk.ph==='ask'&&tk.a===CID,mineAns=tk.ph==='ans'&&tk.t===CID;
-  var head=tk.ph==='disc'?'🎙️ نقاش عام: الكل يتكلم':tk.ph==='ask'?(mineAsk?'🎤 دورك: اسأل سؤالك واختار تسأل مين':'🎤 '+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?'🎤 اتسألت: جاوب دلوقتي':'🎤 '+nm(tk.t)+' بيجاوب '+nm(tk.a));
+  var head=tk.ph==='gap'?'⏸️ فاصل بين الأسئلة: الأصوات متاحة دلوقتي':tk.ph==='disc'?'🎙️ نقاش عام: الكل يتكلم':tk.ph==='ask'?(mineAsk?'🎤 دورك: اسأل سؤالك واختار تسأل مين':'🎤 '+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?'🎤 اتسألت: جاوب دلوقتي':'🎤 '+nm(tk.t)+' بيجاوب '+nm(tk.a));
   var h=el('div','sec',head);pn.appendChild(h);var t=el('div','tm',fmt(Math.max(0,Math.ceil((TM.tkEnd-Date.now())/1000))));t.id='tkt';pn.appendChild(t);
   pn.appendChild(el('p','sub','الميكروفون بتاعك '+((tk.ph==='disc'||mineAsk||mineAns)?'مفتوح (إنت بتتكلم)':'مقفول')+' (الجولة '+tk.cyc+')'));
   if(mineAsk){var row=el('div');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';ros.forEach(function(u){if(u.c===CID)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);
@@ -443,12 +443,14 @@ function fxShow(e,who){var id=e.k;if(!fxFile(id))return;if(id.charAt(0)==='s'){v
   else if(ls('fxsnd')!=='0'){fxStopSnd();try{var a=new Audio(fxFile(id));FXT.au=a;a.play().catch(function(){});var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var b=el('div');b.id='fxsb';b.style.cssText='pointer-events:auto;display:flex;gap:8px;align-items:center;background:#000c;color:#fff;border-radius:99px;padding:6px 8px 6px 14px;font-size:14px';b.appendChild(el('span',0,'🔊 '+(who?who+': ':'')+nm));var x=el('button',0,'⏹');x.style.cssText='font:inherit;border:0;border-radius:99px;background:#fff3;color:#fff;padding:4px 10px';x.onclick=fxStopSnd;b.appendChild(x);fxLayer(1).appendChild(b);a.onended=function(){if(FXT.au===a)fxStopSnd()}}catch(er){}}}
 function fxApply(d,R){if(typeof d.fxs!=='number')return;if(TM.fs===undefined){TM.fs=d.fxs;return}
   var ros=cachedRoster(R)||[];(d.fx||[]).forEach(function(e){if(e.i<=TM.fs)return;var u=ros.filter(function(x){return x.c===e.f})[0];fxShow(e,e.f===CID?'':(u?u.n:''))});TM.fs=Math.max(TM.fs,d.fxs)}
-function fxSend(id){var R=parse();if(!R||!fxHas(id))return;var now=Date.now();if(now-FXT.ts<3000){return}FXT.ts=now;tmPost(R,'fx',{k:id})}
+function fxCd(id){var r=CATALOG.rules||{},sn=id.charAt(0)==='a',cd=(sn?(r.sound_cd||30):(r.sticker_cd||10))*1000,last=(sn?FXT.ta:FXT.ts)||0;return Math.max(0,Math.ceil((last+cd-Date.now())/1000))}
+function fxBlock(id){if(id.charAt(0)==='a'&&TM.vm==='game'&&!(TM.tk&&TM.tk.ph==='gap'))return'gap';return fxCd(id)}
+function fxSend(id){var R=parse();if(!R||!fxHas(id)||fxBlock(id))return;if(id.charAt(0)==='a')FXT.ta=Date.now();else FXT.ts=Date.now();tmPost(R,'fx',{k:id})}
 function fxPicker(){var m=el('div','modal');m.setAttribute('role','dialog');var p=el('div','panel');p.appendChild(el('h3',0,'ابعت للشلة'));
   var st=fxOwn().filter(function(x){return x.charAt(0)==='s'}),sd=fxOwn().filter(function(x){return x.charAt(0)==='a'});
   if(!st.length&&!sd.length)p.appendChild(el('p','sub','لسه معاكش ستيكرز ولا أصوات. اشتريهم من المتجر بنقطك.'));
-  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
-  sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var b=el('button','ghost','🔊 '+nm);b.onclick=function(){vib(20);fxSend(id);closeModal()};p.appendChild(b)});
+  if(st.length){var g=el('div');g.style.cssText='display:grid;grid-template-columns:repeat(4,1fr);gap:8px;margin:10px 0';st.forEach(function(id){var b=el('button');b.style.cssText='background:var(--card);border:1px solid var(--line);border-radius:14px;padding:4px';var im=el('img');im.src=fxFile(id);im.style.cssText='width:100%;display:block';b.appendChild(im);var cs=fxCd(id);if(cs){b.disabled=true;b.style.opacity='.4';b.title='⏳ '+cs}b.onclick=function(){vib(20);fxSend(id);closeModal()};g.appendChild(b)});p.appendChild(g)}
+  sd.forEach(function(id){var nm=(SNDS.filter(function(x){return x[0]===id})[0]||[0,''])[1];var bl=fxBlock(id),b=el('button','ghost','🔊 '+nm+(bl==='gap'?' (في الفاصل بين الأسئلة بس)':bl?' ⏳ '+bl+' ث':''));if(bl)b.disabled=true;b.onclick=function(){vib(20);fxSend(id);closeModal()};p.appendChild(b)});
   var sb=el('button','ghost','🛍️ المتجر');sb.onclick=function(){closeModal();screen='store';draw()};p.appendChild(sb);var x=el('button','ghost','إغلاق');x.onclick=closeModal;p.appendChild(x);m.appendChild(p);ov.innerHTML='';ov.appendChild(m)}
 function storeScreen(){app.innerHTML='';var t=el('div','top');t.appendChild(el('h2',0,'المتجر'));var x=el('button','ib');x.innerHTML=ico('back');x.onclick=function(){fxStopSnd();screen='home';draw()};t.appendChild(x);app.appendChild(t);
   var bal=el('div','sub','🪙 رصيدك: '+(+ls('pts')||0)+' نقطة');bal.style.cssText+=';font-size:18px;font-weight:800;color:var(--txt)';app.appendChild(bal);var msg=el('div','err');msg.textContent=FXT.m||'';FXT.m='';app.appendChild(msg);

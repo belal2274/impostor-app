@@ -219,6 +219,9 @@
   "reveal": 10,
   "posters": true,
   "photos": true,
-  "unlock_all": true
+  "unlock_all": true,
+  "gap": 12,
+  "sound_cd": 30,
+  "sticker_cd": 10
  }
 }
