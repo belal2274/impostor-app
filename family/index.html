@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.29';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.30';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor Family</title>
 <style>
@@ -93,7 +93,7 @@ input.nm{font-size:18px;letter-spacing:0;direction:rtl;padding:11px}
 .trk{height:8px;border-radius:8px;background:#2a2f48;overflow:hidden}.bar{height:100%;background:linear-gradient(90deg,var(--pri),var(--pri2));transition:width 1s linear}
 .splash{position:fixed;inset:0;display:grid;place-items:center;background:var(--bg) url(img/splash.jpg) center/cover;z-index:20;transition:opacity .4s}
 </style></head><body><main id="app"></main><div id="ov"></div>
-<script src="catalog.js?v=3.0.29"></script>
+<script src="catalog.js?v=3.0.30"></script>
 <script>
 (function(){
 var DEF=['بلال','فادي','محمد'];
@@ -303,7 +303,7 @@ function el(t,c,x){var e=document.createElement(t);if(c)e.className=c;if(x!=null
 function html(t,c,x){var e=el(t,c);e.innerHTML=x;return e}
 function grad(i){return 'linear-gradient(135deg,'+COL[i][0]+','+COL[i][1]+')'}
 function parse(){var m=/^#(\d)(\d)(\d{3})$/.exec(location.hash);if(!m)return null;var c=+m[1]-1,n=+m[2];if(c<0||c>=CATS.length||n<2)return null;return{c:c,n:n,code:m[1]+m[2]+m[3]}}
-function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
+function go(hash){if(!hash&&typeof VC!=='undefined'&&VC.on)vcStop();if(!hash&&TM.code){clearTimeout(TM.pl);clearInterval(TM.iv);TM.code=null;TM.pl=null}shown=false;screen='home';location.hash=hash;if(!hash)history.replaceState(null,'',location.pathname);draw()}
 function wordParts(w){var m=/^(\S+)\s+(.+)$/.exec(w);if(m&&!/[\u0600-\u06FFA-Za-z]/.test(m[1]))return{e:m[1],t:m[2]};return{e:((window.CATALOG&&CATALOG.wordIcons)||{})[w]||null,t:w}} function codeCard(R){var p=el('div','panel');p.appendChild(el('div','sec','رقم الروم، قوله للباقي'));p.appendChild(el('div','code',R.code));return p}
 function closeModal(){ov.innerHTML=''}
 function pickCat(i){vib();countPick(i)}
@@ -670,7 +670,7 @@ function draw(){
   var mm=el('button','ghost','القايمة الرئيسية');mm.style.cssText='font-size:12px;padding:6px 14px;min-height:0;width:auto;margin:16px auto 0;display:block;opacity:.65';mm.onclick=confirmHome;app.appendChild(mm);
 }
 
-window.addEventListener('hashchange',function(){shown=false;draw()});
+window.addEventListener('hashchange',function(){if(!parse()&&TM.code){clearTimeout(TM.pl);clearInterval(TM.iv);TM.code=null;TM.pl=null}shown=false;draw()});
 window.__back=function(){if(ov.innerHTML){closeModal();return true}if(screen==='settings'||screen==='ob'&&ls('ob')){screen='home';draw();return true}if(location.hash){var RR=parse();if(RR&&LB.code)leaveRoom(RR);else go('');return true}return false};
 var sp=el('div','splash');sp.appendChild((function(){var l=el('img','mk');l.src='img/mark.png';l.style.width='190px';l.style.height='190px';return l})());document.body.appendChild(sp);
 setTimeout(function(){sp.style.opacity=0;setTimeout(function(){sp.remove()},400)},900);
