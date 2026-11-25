@@ -73,6 +73,10 @@
    "id": "s18",
    "price": 10,
    "adult": true
+  },
+  {
+   "id": "s19",
+   "price": 10
   }
  ],
  "sounds": [
@@ -91,6 +95,27 @@
   {
    "id": "a4",
    "price": 5
+  },
+  {
+   "id": "a5",
+   "price": 5
+  },
+  {
+   "id": "a6",
+   "price": 5
+  },
+  {
+   "id": "a7",
+   "price": 5
+  },
+  {
+   "id": "a8",
+   "price": 5
+  },
+  {
+   "id": "a9",
+   "price": 5,
+   "adult": true
   }
  ],
  "frames": [
