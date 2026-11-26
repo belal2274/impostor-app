@@ -1,5 +1,5 @@
 <!doctype html>
-<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.38';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
+<html lang="ar" dir="rtl"><head><meta charset="utf-8"><script>var BUILD='3.0.39';(function(){try{if(!/github\.io$/.test(location.hostname))return;fetch('version.json?t='+Date.now(),{cache:'no-store'}).then(function(r){return r.json()}).then(function(j){if(j&&j.b&&j.b!==BUILD&&sessionStorage.getItem('rl')!==j.b){sessionStorage.setItem('rl',j.b);location.replace(location.pathname+'?v='+encodeURIComponent(j.b)+'&t='+Date.now())}}).catch(function(){})}catch(e){}})()</script>
 <meta name="viewport" content="width=device-width,initial-scale=1,viewport-fit=cover,user-scalable=no">
 <title>BMF Impostor Family</title>
 <style>
@@ -371,19 +371,20 @@ function fmt(t){var m=Math.floor(t/60),x=t%60;return m+':'+(x<10?'0':'')+x}
 
 function talkGate(){if(TM.vm!=='game'){return}
   if(!VC.on&&TM.ph!=='res'&&!VC.auto&&parse()){VC.auto=true;try{vcStart()}catch(e){}}
-  var tk=TM.tk,open=!!tk&&((tk.ph==='ask'&&tk.a===CID)||(tk.ph==='ans'&&tk.t===CID));
+  var tk=TM.tk,QQ=parse(),open=!!tk&&tk.ph==='ask'&&(tk.a===CID||tk.pv===CID||(QQ&&QQ.n===2));
   VC.gate=true;if(VC.mic!==open){VC.mic=open;if(VC.stream)VC.stream.getAudioTracks().forEach(function(t){t.enabled=open})}}
-function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel'),G=TM.vm==='game';if(!tk){pn.appendChild(el('div','sec',G?'🎤 الصوت هيبدأ حالاً...':'❓ الأسئلة هتبدأ حالاً...'));return pn}
+function talkPanel(R,ros,me){var tk=TM.tk,pn=el('div','panel'),G=TM.vm==='game';
   function nm(c){var u=ros.filter(function(x){return x.c===c})[0];return u?u.n:'?'}
-  if(tk.ph==='done'){pn.appendChild(el('div','sec','✅ وصلتوا للحد الأقصى للأسئلة'));pn.appendChild(el('p','sub','خلصت الـ3 جولات أسئلة. التصويت اتفتح.'));var dm=el('div','sec','✅ الأسئلة خلصت · التصويت اتفتح');dm.style.fontSize='14px';pn.appendChild(dm);return pn}
-  var mineAsk=tk.ph==='ask'&&tk.a===CID,mineAns=tk.ph==='ans'&&tk.t===CID,ic=G?'🎤 ':'❓ ';
-  var head=tk.ph==='gap'?'⏸️ فاصل بين الأسئلة: الأصوات متاحة دلوقتي':tk.ph==='ask'?(mineAsk?ic+'دورك: اختار تسأل مين':ic+nm(tk.a)+' بيسأل'+(tk.t?' '+nm(tk.t):'')):(mineAns?ic+'اتسألت: جاوب دلوقتي':ic+nm(tk.t)+' بيجاوب '+nm(tk.a));
+  function rdy(){if(R.n>=3&&TM.qa===false){var rb=el('button',TM.qm?'ghost':'btn',TM.qm?'✓ جاهز للتصويت ('+(TM.qr||0)+' من '+R.n+') · دوس لو لسه':'🗳️ جاهز أصوّت ('+(TM.qr||0)+' من '+R.n+')');rb.style.marginTop='8px';rb.onclick=function(){vib(20);TM.qm=!TM.qm;tmPost(R,'qrdy',{v:TM.qm?1:0});draw()};pn.appendChild(rb);pn.appendChild(el('p','sub','التصويت بيبدأ لما كل اللاعبين يدوسوا جاهز.'))}}
+  if(!G){if(R.n<3)return null;if(TM.qa!==false){pn.appendChild(el('div','sec','✅ كلكم جاهزين · التصويت اتفتح'));return pn}pn.appendChild(el('div','sec','🗳️ لما تخلصوا كلام على المكالمة'));rdy();return pn}
+  if(!tk){pn.appendChild(el('div','sec','🎤 الصوت هيبدأ حالاً...'));return pn}
+  if(tk.ph==='done'){var dm=el('div','sec','✅ الأسئلة خلصت · التصويت اتفتح');pn.appendChild(dm);return pn}
+  var mineAsk=tk.ph==='ask'&&tk.a===CID,two=R.n===2,mic=mineAsk||tk.pv===CID||two,ic='🎤 ';
+  var head=mineAsk?(tk.pv?ic+nm(tk.pv)+' سألك. دورك: اختار تسأل مين':ic+'دورك: اختار تسأل مين'):ic+nm(tk.a)+' بيسأل'+(tk.pv?' (اتسأل من '+nm(tk.pv)+')':'');
   var h=el('div','sec',head+(R.n>=3?' · جولة الأسئلة '+(tk.cyc||1)+' من 3':'')+' · الأسئلة: '+(tk.nq||0));pn.appendChild(h);var t=el('div','tm',fmt(Math.max(0,Math.ceil((TM.tkEnd-Date.now())/1000))));t.id='tkt';pn.appendChild(t);
-  if(G)pn.appendChild(el('p','sub','الميكروفون بتاعك '+((mineAsk||mineAns)?'مفتوح (إنت بتتكلم)':'مقفول')));
-  if(mineAsk){var row=el('div','askrow');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';var cdl=tk.cd||null;ros.forEach(function(u){if(u.c===CID)return;if(cdl&&cdl.indexOf(u.c)<0)return;var b=el('button',tk.t===u.c?'btn':'ghost',(tk.t===u.c?'✓ ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tk.t=u.c;tmPost(R,'ask',{v:u.c});draw()};row.appendChild(b)});pn.appendChild(row);if(cdl&&cdl.length===1&&R.n>=3)pn.appendChild(el('div','sub','مفيش غيره: لازم تسأل '+nm(cdl[0])));
-    if(tk.t){var dn=el('button','btn','خلصت، سيب '+nm(tk.t)+' يجاوب');dn.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn)}else pn.appendChild(el('p','sub','لازم تختار حد تسأله، أو الدور هيعدّي.'))}
-  if(mineAns){var dn2=el('button','btn','خلصت إجابة');dn2.onclick=function(){vib(30);tmPost(R,'tdone')};pn.appendChild(dn2)}
-  if(R.n>=3&&TM.qa===false){var rb=el('button',TM.qm?'ghost':'btn',TM.qm?'✓ جاهز للتصويت ('+(TM.qr||0)+' من '+R.n+') · دوس لو لسه':'🗳️ جاهز أصوّت ('+(TM.qr||0)+' من '+R.n+')');rb.style.marginTop='8px';rb.onclick=function(){vib(20);TM.qm=!TM.qm;tmPost(R,'qrdy',{v:TM.qm?1:0});draw()};pn.appendChild(rb);pn.appendChild(el('p','sub','التصويت بيبدأ لما كل اللاعبين يدوسوا جاهز. الأسئلة مفتوحة لحد وقتها.'))}
+  pn.appendChild(el('p','sub','الميكروفون بتاعك '+(mic?'مفتوح (إنت بتتكلم)':'مقفول')));
+  if(mineAsk){var row=el('div','askrow');row.style.cssText='display:flex;flex-wrap:wrap;gap:8px;justify-content:center;margin:6px 0';var cdl=tk.cd||null;ros.forEach(function(u){if(u.c===CID)return;if(cdl&&cdl.indexOf(u.c)<0)return;var b=el('button','ghost',(two?'اسأل ':'')+u.n);b.style.cssText+=';width:auto;padding:8px 16px';b.onclick=function(){vib(20);tmPost(R,'ask',{v:u.c})};row.appendChild(b)});pn.appendChild(row);if(cdl&&cdl.length===1&&R.n>=3)pn.appendChild(el('div','sub','مفيش غيره: لازم تسأل '+nm(cdl[0])))}
+  rdy();
   return pn}
 function tmPhase(){if(TM.res)return 'res';if(TM.st!==null)return 'talk';if(TM.endCd!==null)return Date.now()>=TM.endCd?'role':'cd';return 'ready'}
 function tick(){var np=tmPhase();if(np!==TM.ph){TM.ph=np;if(np==='talk')shown=false;if(np==='role'){vib(120);beep(880,.25)}draw();return}
@@ -403,7 +404,7 @@ function accFlush(){var u=accName(),tk=ls('acc_t');if(!u||!tk)return;var q=[];tr
 function applyPoints(R,res){var rid=R.code+'-'+res.round+'-'+(res.at%100000),key='pa.'+rid;if(ls(key))return;ls(key,'1');var dd=res.d[CID]||0,bb=(res.win&&res.win.indexOf(CID)>=0)?(res.bonus||0):0;var bal=(+ls('pts')||0)+dd;if(bal<0){bal=0;TM.reset=true}bal+=bb;ls('pts',bal);if(accName()){var q=[];try{q=JSON.parse(ls('pq')||'[]')}catch(e){}q.push({rid:rid,d:dd,b:bb,code:R.code,round:res.round});ls('pq',JSON.stringify(q));accFlush()}}
 function tmApply(d){if(!d||typeof d.k!=='number')return;var R=parse();if(R)fxApply(d,R);
   if(d.nx&&d.nx!==TM.code){var nc=d.nx;clearTimeout(TM.pl);TM.pl=null;clearInterval(TM.iv);vib(120);beep(660,.2);go(nc);return}
-  var sig=[d.k,d.rd,d.vt,d.mine,d.rm,d.round,d.rounds,d.lead,d.tk?d.tk.ph+d.tk.a+d.tk.t+'/'+d.tk.nq+'/'+d.tk.cyc:'',d.qr,d.qm,d.qa,d.vm,(d.g2&&d.g2.opts?'o':'')+(d.g2&&d.g2.gw!=null?'g':'')].join();var ch=sig!==TM.sig;TM.sig=sig;
+  var sig=[d.k,d.rd,d.vt,d.mine,d.rm,d.round,d.rounds,d.lead,d.tk?d.tk.ph+d.tk.a+d.tk.t+d.tk.pv+'/'+d.tk.nq+'/'+d.tk.cyc:'',d.qr,d.qm,d.qa,d.vm,(d.g2&&d.g2.opts?'o':'')+(d.g2&&d.g2.gw!=null?'g':'')].join();var ch=sig!==TM.sig;TM.sig=sig;
   TM.k=d.k;TM.n=d.n;if(d.dur)TM.dur=d.dur;if(d.vm)TM.vm=d.vm;TM.tk=d.tk||null;if(d.rv!==null&&d.rv!==undefined)TM.rvEnd=Date.now()+d.rv;if(d.tk)TM.tkEnd=Date.now()+d.tk.u;talkGate();TM.rd=d.rd;TM.rm=!!d.rm;TM.qr=d.qr||0;TM.qm=!!d.qm;TM.qa=(d.qa===undefined?true:!!d.qa);TM.vt=d.vt;TM.g2=d.g2||null;TM.mine=d.mine;TM.round=d.round;TM.rounds=d.rounds;TM.lead=d.lead;
   if(d.ca!==null&&d.ca!==undefined&&TM.endCd===null)TM.endCd=Date.now()+d.ca;
   if(d.el!==null&&d.el!==undefined&&TM.st===null)TM.st=Date.now()-d.el;
@@ -673,7 +674,7 @@ function draw0(){
   if(ph==='talk'){
     var topP=el('p','sub','ده دورك السري. متوريش الشاشة لحد.');app.appendChild(topP);roleCard(false);strip();
     app.appendChild(el('p','sub','اسألوا بعض من غير ما تقولوا الكلمة نفسها.'));
-    var PH=!!(window.matchMedia&&matchMedia('(max-width:600px)').matches),tkp=null;if(TM.vm==='game'||R.n>=3){tkp=talkPanel(R,ros,me);if(!PH)app.appendChild(tkp)}
+    var PH=!!(window.matchMedia&&matchMedia('(max-width:600px)').matches),tkp=null;if((TM.vm==='game'||R.n>=3)&&!(TM.g2&&TM.g2.gw!=null)){tkp=talkPanel(R,ros,me);if(tkp&&!PH)app.appendChild(tkp)}
     var tpn=el('div','panel');if(TM.vm==='game'){tpn.appendChild(el('p','sub','الجولة مفتوحة لحد ساعة كحد أقصى. الأسئلة مفتوحة لحد ما الكل يجهّز للتصويت.'))}else{tpn.appendChild(html('div','sec',ico('timer')+' مؤقت النقاش ('+Math.round((TM.dur||180)/60*10)/10+' دقيقة)'));
     var d=el('div','tm'+(TM.t===0?' end':''),fmt(TM.t));d.id='tmd';tpn.appendChild(d);
     var tr=el('div','trk'),bar=el('div','bar');bar.id='tmb';bar.style.width=(TM.t/(TM.dur||180)*100)+'%';tr.appendChild(bar);tpn.appendChild(tr)}if(TM.vm!=='game'&&window.matchMedia&&matchMedia('(max-width:600px) and (max-height:760px)').matches)app.insertBefore(tpn,topP.nextSibling);else app.appendChild(tpn);
@@ -813,12 +814,12 @@ function offQ2(){var P=OFF.players,im=OFF.imp,kn=1-im;
 function offQ(){offTag();var P=OFF.players;
  if(OFF.ph==='qintro'&&P.length===2){OFF.ph='q2';OFF.qn=0;OFF.dT=Date.now();return offQ2()}
  if(OFF.ph==='q2')return offQ2();
- if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};OFF.nq=0;OFF.qr=1;OFF.st=OFF.order[0];var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده. في كل جولة كل واحد يسأل مرة واحدة: بتختار مين تسأل من اللي لسه ماسألوش، ولما يفضل واحد بس لازم تسأله. فيه 3 جولات بالكتير. التصويت يبدأ لما الكل يقول جاهز، أو بعد الجولة 3. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
- var as=OFF.asker,pa=P[as];var c2=el('div','panel offpass');var a=offAv(pa,as,64);a.style.margin='0 auto';c2.appendChild(a);c2.appendChild(el('h2',0,pa.n+' بيسأل'));
+ if(OFF.ph==='qintro'){OFF.asker=OFF.order[0];OFF.asked={};OFF.lastq=null;OFF.nq=0;OFF.qr=1;OFF.st=OFF.order[0];var c=el('div','panel offpass');c.appendChild(el('h1',0,'وقت الأسئلة'));c.appendChild(el('p','sub','كل واحد يسأل واحد من التانيين سؤال عن الكلمة من غير ما يقولها. اللي اتسأل بيسأل بعده. في كل جولة كل واحد يسأل مرة واحدة: بتختار مين تسأل من اللي لسه ماسألوش، ولما يفضل واحد بس لازم تسأله. فيه 3 جولات بالكتير. التصويت يبدأ لما الكل يقول جاهز، أو بعد الجولة 3. '+P[OFF.asker].n+' يبدأ.'));var b=el('button','btn','يلا نبدأ');b.onclick=function(){OFF.ph='ask';OFF.tgt=null;draw()};c.appendChild(b);app.appendChild(c);return}
+ var as=OFF.asker,pa=P[as];var c2=el('div','panel offpass');var a=offAv(pa,as,64);a.style.margin='0 auto';c2.appendChild(a);c2.appendChild(el('h2',0,pa.n+' بيسأل'));if(OFF.lastq&&OFF.lastq.a!==as)c2.appendChild(el('p','sub',P[OFF.lastq.a].n+' سأل '+P[OFF.lastq.t].n));
  var left=P.map(function(_,i){return i}).filter(function(i){return i!==as&&!OFF.asked[i]});var last=Object.keys(OFF.asked).length>=P.length-1;
  var cand=P.map(function(_,i){return i}).filter(function(i){return i!==as&&!OFF.asked[i]});if(!cand.length)cand=[OFF.st!==as?OFF.st:(as+1)%P.length];
  c2.appendChild(el('p','sub',OFF.tgt==null?'اختار تسأل مين:':'اسأل '+P[OFF.tgt].n+' سؤال. لما يجاوب دوس تحت.'));
- if(OFF.tgt==null){var g=el('div','offcats');cand.forEach(function(i){var b=el('button','ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(P[i],i,34));b.appendChild(document.createTextNode(P[i].n));b.onclick=function(){OFF.tgt=i;draw()};g.appendChild(b)});c2.appendChild(g);var rv=el('button','btn','🗳️ كلنا جاهزين نصوّت');rv.style.marginTop='14px';rv.onclick=function(){OFF.ph='rc';OFF.rci=0;draw()};c2.appendChild(rv)}
+ if(OFF.tgt==null){var g=el('div','offcats');cand.forEach(function(i){var b=el('button','ghost');b.style.cssText+=';display:flex;align-items:center;gap:8px;min-height:52px;padding:4px 10px;overflow-wrap:anywhere';b.appendChild(offAv(P[i],i,34));b.appendChild(document.createTextNode(P[i].n));b.onclick=function(){vib(20);OFF.nq=(OFF.nq||0)+1;OFF.asked[as]=1;var tg=i;if(Object.keys(OFF.asked).length>=P.length){OFF.asked={};OFF.qr++;OFF.st=tg}OFF.lastq={a:as,t:tg};OFF.asker=tg;if(OFF.qr>3)OFF.ph='qcap';OFF.tgt=null;draw()};g.appendChild(b)});c2.appendChild(g);var rv=el('button','btn','🗳️ كلنا جاهزين نصوّت');rv.style.marginTop='14px';rv.onclick=function(){OFF.ph='rc';OFF.rci=0;draw()};c2.appendChild(rv)}
  else{var ok=el('button','btn','اتسأل واتجاوب ✓');ok.onclick=function(){OFF.nq=(OFF.nq||0)+1;OFF.asked[as]=1;var tg=OFF.tgt;if(Object.keys(OFF.asked).length>=P.length){OFF.asked={};OFF.qr++;OFF.st=tg}OFF.asker=tg;if(OFF.qr>3)OFF.ph='qcap';OFF.tgt=null;draw()};c2.appendChild(ok);var ch=el('button','ghost','غيّر الشخص');ch.onclick=function(){OFF.tgt=null;draw()};c2.appendChild(ch)}
  app.appendChild(c2);var pr=el('p','sub','جولة الأسئلة '+OFF.qr+' من 3 · الأسئلة لحد دلوقتي: '+(OFF.nq||0)+'. ممكن تصوّتوا قبل الجولة 3 لما الكل يجهّز.');pr.style.marginBottom='80px';app.appendChild(pr)}
 var OFFTM=null;
